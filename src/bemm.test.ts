@@ -1,4 +1,4 @@
-import { Bemm, BemmObject, createBemm } from "./bemm";
+import { Bemm, createBemm } from "./bemm";
 
 describe("Class Component", () => {
   it("Should respond with the default class", () => {
@@ -27,6 +27,17 @@ describe("Class Component", () => {
       "block__test--blue",
       "block__test--black",
     ]);
+  });
+
+  it("Should respond convert all cases right", () => {
+    const bemm = new Bemm("Block");
+    expect(bemm.c("Element", "Dark")).toEqual("block__element--dark");
+  });
+  it("Should not respond with converted cases", () => {
+    const bemm = new Bemm("Block", {
+      toKebabCase: false,
+    });
+    expect(bemm.c("Element", "Dark")).toEqual("Block__Element--Dark");
   });
 });
 
