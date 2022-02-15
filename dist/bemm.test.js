@@ -25,6 +25,16 @@ describe("Class Component", () => {
             "block__test--black",
         ]);
     });
+    it("Should respond convert all cases right", () => {
+        const bemm = new bemm_1.Bemm("Block");
+        expect(bemm.c("Element", "Dark")).toEqual("block__element--dark");
+    });
+    it("Should not respond with converted cases", () => {
+        const bemm = new bemm_1.Bemm("Block", {
+            toKebabCase: false,
+        });
+        expect(bemm.c("Element", "Dark")).toEqual("Block__Element--Dark");
+    });
 });
 describe("Style", () => {
     it("Should respond with the default class", () => {
