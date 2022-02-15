@@ -4,6 +4,14 @@
 
 Create BEM names from within your component.
 
+### Installation
+
+```bash
+npm install bemm
+// or yarn
+yarn add bemm
+```
+
 ### Setup
 
 ```js
