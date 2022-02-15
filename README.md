@@ -58,7 +58,7 @@ In order to use the function, you have to initiate the function with it's block 
 
 Create the function an set the the block
 
-```
+```js
 const bemm = createBemm('my-block-class');
 ```
 
@@ -77,7 +77,7 @@ The create bemm function, or whatever you want to call it, has two arguments:
 | `modifier` | `""`    | `string | string[]`   |
 
 
-```
+```js
 interface bemmObject {
   element: string;
   modifier: string | string[];
@@ -120,6 +120,7 @@ render `<div class="${bem('background',['primary','ghost'])}"></div>`
     MEDIUM: 'medium',
     LARGE: 'large
   }
+
   enum ButtonColor {
     PRIMARY: 'primary',
     SECONDARY: 'secondary',
@@ -129,10 +130,10 @@ render `<div class="${bem('background',['primary','ghost'])}"></div>`
   export default defineComponent({
     props: {
       size: {
-        type: string as PropType<ButtonSize>,
+        type: String as PropType<ButtonSize>,
         default: ButtonSize.MEDIUM
       }, color: {
-        type: string as PropType<ButtonColor>,
+        type: String as PropType<ButtonColor>,
         default: ButtonColor.PRIMARY
       }
     },
