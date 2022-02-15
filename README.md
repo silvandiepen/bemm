@@ -8,7 +8,8 @@ Create BEM names from within your component.
 
 ```bash
 npm install bemm
-// or yarn
+
+# or yarn
 yarn add bemm
 ```
 
@@ -71,10 +72,10 @@ string for the block.
 
 The create bemm function, or whatever you want to call it, has two arguments:
 
-| Argument   | Default | Type                  |
-| ---------- | ------- | --------------------- |
-| `element`  | `""`    | `string | bemmObject` |
-| `modifier` | `""`    | `string | string[]`   |
+| Argument   | Default | Type                   |
+| ---------- | ------- | ---------------------- |
+| `element`  | `""`    | `string \| bemmObject` |
+| `modifier` | `""`    | `string \| string[]`   |
 
 
 ```js
