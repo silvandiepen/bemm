@@ -1,6 +1,6 @@
 # Bemm
 
-## Block Element Modifier Module
+## Block Element Modifier Maker
 
 Create BEM names from within your component.
 
