@@ -63,7 +63,6 @@ string for the block.
 
 The create bemm function, or whatever you want to call it, has two arguments:
 
-| ---------- | ------- | --------------------- |
 | Argument   | Default | Type                  |
 | ---------- | ------- | --------------------- |
 | `element`  | `""`    | `string | bemmObject` |
