@@ -140,7 +140,7 @@ bemm2('Container'); // `.myButton__Container`
 
 ```html
 <template>
-  <button :class="[bemm(),bem('',modifiers)]">
+  <button :class="[bemm(),bemm('',modifiers)]">
       <span :class="bemm('text')"></span>
   </button>
 </template>
