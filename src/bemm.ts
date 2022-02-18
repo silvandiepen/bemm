@@ -53,15 +53,13 @@ export const bemm = (
   }
 };
 
-export const createBemm = (
-  block: string,
-  settings: BemmSettings = {}
-): Function => {
-  return (
+export const createBemm =
+  (block: string, settings: BemmSettings = {}): Function =>
+  (
     e: BemmObject["element"] | BemmObject = "",
     m: BemmObject["modifier"] = ""
-  ) => bemm(block, e, m, settings);
-};
+  ) =>
+    bemm(block, e, m, settings);
 
 export class Bemm {
   block: string = "";
@@ -72,7 +70,7 @@ export class Bemm {
     this.settings = settings;
   }
 
-  c(
+  m(
     elm: BemmObject["element"] | BemmObject = "",
     mod: BemmObject["modifier"] = ""
   ): string | string[] {

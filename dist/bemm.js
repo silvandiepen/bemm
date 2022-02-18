@@ -38,9 +38,7 @@ const bemm = (block, elm = "", mod = "", set) => {
     }
 };
 exports.bemm = bemm;
-const createBemm = (block, settings = {}) => {
-    return (e = "", m = "") => (0, exports.bemm)(block, e, m, settings);
-};
+const createBemm = (block, settings = {}) => (e = "", m = "") => (0, exports.bemm)(block, e, m, settings);
 exports.createBemm = createBemm;
 class Bemm {
     constructor(block, settings = {}) {
@@ -49,7 +47,7 @@ class Bemm {
         this.block = block;
         this.settings = settings;
     }
-    c(elm = "", mod = "") {
+    m(elm = "", mod = "") {
         return (0, exports.bemm)(this.block, elm, mod, this.settings);
     }
 }
