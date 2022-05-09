@@ -18,7 +18,7 @@ yarn add bemm
 ```js
 import { createBemm } from "bemm";
 
-const bemm = createBem("block");
+const bemm = createBemm("block");
 
 render`
     <div class="${bemm()}">
