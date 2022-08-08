@@ -60,4 +60,33 @@ describe("Style", () => {
             "block__test--black",
         ]);
     });
+    it("Should return with multiple block", () => {
+        const bemm = (0, bemm_1.createBemm)(["block1", "block2"]);
+        expect(bemm()).toEqual(["block1", "block2"]);
+    });
+    it("Should return with multiple block with elements", () => {
+        const bemm = (0, bemm_1.createBemm)(["block1", "block2"]);
+        expect(bemm("test")).toEqual(["block1__test", "block2__test"]);
+    });
+    it("Should return with multiple with element and modifiers", () => {
+        const bemm = (0, bemm_1.createBemm)(["block1", "block2"]);
+        expect(bemm("test", ["blue", "black"])).toEqual([
+            "block1__test--blue",
+            "block1__test--black",
+            "block2__test--blue",
+            "block2__test--black",
+        ]);
+    });
+    it("Should return with multiple with element and modifiers", () => {
+        const bemm = (0, bemm_1.createBemm)(["block1", "block2"]);
+        expect(bemm("test", ["blue", "black"], { returnString: true })).toBe("block1__test--blue block1__test--black block2__test--blue block2__test--black");
+    });
+});
+describe("Output", () => {
+    it("Should return a string with multiple modifiers", () => {
+        expect((0, bemm_1.bemm)("block", "test", ["blue", "black"], { returnString: true })).toBe("block__test--blue block__test--black");
+    });
+    it("Should return with multiple with element and modifiers", () => {
+        expect((0, bemm_1.bemm)("block", "test", ["blue", "black"], { returnArray: true })).toEqual(["block__test--blue", "block__test--black"]);
+    });
 });
