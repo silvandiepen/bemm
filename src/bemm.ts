@@ -8,25 +8,27 @@ const toBemmObject = (e: string | BemmObject, alt: BemmObject): BemmObject => {
   return alt;
 };
 
-const toBemmSettings = (set: BemmSettings): BemmSettings => {
+const toBemmSettings = (settings: BemmSettings): BemmSettings => {
   return {
     toKebabCase: true,
-    ...set,
+    returnArray: false,
+    returnString: false,
+    ...settings,
   };
 };
 
 export const bemm = (
   block: string,
-  elm: BemmObject["element"] | BemmObject = "",
-  mod: BemmObject["modifier"] = "",
-  set: BemmSettings
+  e: BemmObject["element"] | BemmObject = "",
+  m: BemmObject["modifier"] = "",
+  s: BemmSettings
 ): string | string[] => {
-  const { element, modifier } = toBemmObject(elm, {
-    element: elm,
-    modifier: mod,
+  const { element, modifier } = toBemmObject(e, {
+    element: e,
+    modifier: m,
   } as BemmObject);
 
-  const settings = toBemmSettings(set);
+  const settings = toBemmSettings(s);
 
   if (block == "") {
     return ``;
@@ -41,25 +43,60 @@ export const bemm = (
     element ? `__${convertCase(element)}` : ``
   }`;
 
-  if (typeof modifier == "object") {
-    const classes: string[] = [];
+  const classes: string[] = [];
 
+  if (typeof modifier == "object") {
     modifier.forEach((mod: string) => {
       classes.push(`${elementClass}--${convertCase(mod)}`);
     });
-    return classes;
   } else {
-    return `${elementClass}${modifier ? `--${convertCase(modifier)}` : ``}`;
+    let className = `${elementClass}${
+      modifier ? `--${convertCase(modifier)}` : ``
+    }`;
+
+    classes.push(className);
   }
+
+  if (settings.returnString && !settings.returnArray)
+    return typeof classes == "string" ? classes : classes.join(" ");
+  return settings.returnArray
+    ? classes
+    : classes.length == 1
+    ? classes[0]
+    : classes;
 };
 
 export const createBemm =
-  (block: string, settings: BemmSettings = {}): Function =>
+  (block: string | string[], baseSettings: BemmSettings = {}): Function =>
   (
     e: BemmObject["element"] | BemmObject = "",
-    m: BemmObject["modifier"] = ""
-  ) =>
-    bemm(block, e, m, settings);
+    m: BemmObject["modifier"] = "",
+    s: BemmSettings
+  ) => {
+    const settings = toBemmSettings({ ...baseSettings, ...s });
+
+    let classes: string[] = [];
+    if (typeof block == "string") {
+      classes = bemm(block, e, m, {
+        ...settings,
+        returnArray: true,
+      }) as string[];
+    } else {
+      block.forEach((b) => {
+        classes = [
+          ...classes,
+          ...(bemm(b, e, m, { ...settings, returnArray: true }) as string[]),
+        ];
+      });
+    }
+    if (settings.returnString && !settings.returnArray)
+    return typeof classes == "string" ? classes : classes.join(" ");
+    return settings.returnArray
+      ? classes
+      : classes.length == 1
+      ? classes[0]
+      : classes;
+  };
 
 export class Bemm {
   block: string = "";
@@ -71,10 +108,20 @@ export class Bemm {
   }
 
   m(
-    elm: BemmObject["element"] | BemmObject = "",
-    mod: BemmObject["modifier"] = ""
+    e: BemmObject["element"] | BemmObject = "",
+    m: BemmObject["modifier"] = ""
   ): string | string[] {
-    return bemm(this.block, elm, mod, this.settings);
+    const classes = bemm(this.block, e, m, {
+      ...this.settings,
+      returnArray: true,
+    });
+
+    if (this.settings.returnString && !this.settings.returnArray) return (classes as string[]).join(" ");
+    return this.settings.returnArray
+      ? classes
+      : classes.length == 1
+      ? classes[0]
+      : classes;
   }
 }
 

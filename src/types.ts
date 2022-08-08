@@ -5,4 +5,6 @@ export interface BemmObject {
 
 export interface BemmSettings {
   toKebabCase?: boolean;
+  returnArray?: boolean;
+  returnString?: boolean;
 }

@@ -1,6 +1,6 @@
 # Bemm
 
-## Block__Element--Modifier Maker
+## Block\_\_Element--Modifier Maker
 
 Create BEM names from within your component.
 
@@ -60,7 +60,7 @@ In order to use the function, you have to initiate the function with it's block 
 Create the function an set the the block
 
 ```js
-const bemm = createBemm('my-block-class');
+const bemm = createBemm("my-block-class");
 ```
 
 Then you will be able to use the `bemm` function throughout your html to create the desired classes.
@@ -77,7 +77,6 @@ The create bemm function, or whatever you want to call it, has two arguments:
 | `element`  | `""`    | `string \| bemmObject` |
 | `modifier` | `""`    | `string \| string[]`   |
 
-
 ```js
 interface bemmObject {
   element: string;
@@ -85,63 +84,70 @@ interface bemmObject {
 }
 ```
 
-
 ### Multiple modifiers
 
-The modifier argument accepts a string or an array of strings, in this way you can create multiple modifiers with the same block__element in one function. 
+The modifier argument accepts a string or an array of strings, in this way you can create multiple modifiers with the same block\_\_element in one function.
 
 ```js
+const bemm = createBemm("my-button");
 
-const bemm = createBemm('my-button');
-
-render `<div class="${bem('background',['primary','ghost'])}"></div>`
-
+render`<div class="${bem("background", ["primary", "ghost"])}"></div>`;
 ```
 
 ```html
 <div class="my-button__background--primary my-button__background--ghost"></div>
 ```
 
-
 ### Settings
 
 Available settings:
 
-| setting       | default | description                           |
-| ------------- | ------- | ------------------------------------- |
-| `toKebabCase` | `true`  | Converts all elements to `kebab-case` |
+| setting        | default | description                           |
+| -------------- | ------- | ------------------------------------- |
+| `toKebabCase`  | `true`  | Converts all elements to `kebab-case` |
+| `returnArray`  | `false` | Always returns an array               |
+| `returnString` | `false` | Always returns a string               |
 
 Usage of settings:
 
 ```js
-const bemm = createBemm('my-button', { toKebabCase: true });
+const bemm = createBemm("my-button", { toKebabCase: true });
 ```
 
 #### KebabCase
 
-By default all elements of the class will be converted automatically to `kebab-case`, this means you can use spaces or Caps in your strings, but they will automatically be converted. 
+By default all elements of the class will be converted automatically to `kebab-case`, this means you can use spaces or Caps in your strings, but they will automatically be converted.
 
 You can change this by fixing the settings at initialisation.
 
 ```js
-const bemm1 = createBemm('myButton');
+const bemm1 = createBemm("myButton");
 
-bemm1('Container'); // `.my-button__container`
+bemm1("Container"); // `.my-button__container`
 
-const bemm2 = createBemm('myButton',{
-  toKebabCase: false
-})
+const bemm2 = createBemm("myButton", {
+  toKebabCase: false,
+});
 
-bemm2('Container'); // `.myButton__Container`
+bemm2("Container"); // `.myButton__Container`
+```
+
+### Multiple blocks
+
+There are cases you might want to define multiple blocks. An example of this would be form components, where you wnt to have indivudual classes for the componentn, but perhabs a shared class like "input-field" for all types of input fields. In that case you can define multiple blocks on initialization, this will create a class for each block on every element.
+
+```js
+const bemm = createBemm(["input-text", "input-field"]);
+
+bemm(); // --> `['.input-text','input-field']
 ```
 
 ### In a Vue component
 
-
 ```html
 <template>
   <button :class="[bemm(),bemm('',modifiers)]">
-      <span :class="bemm('text')"></span>
+    <span :class="bemm('text')"></span>
   </button>
 </template>
 
@@ -183,29 +189,29 @@ bemm2('Container'); // `.myButton__Container`
   })
 </script>
 <style lang="scss">
- .my-button{
-   font-size: 1em;
-   padding: 1em;
+  .my-button {
+    font-size: 1em;
+    padding: 1em;
 
     /* Sizes */
-    &--small{
-     font-size: 0.8em;
+    &--small {
+      font-size: 0.8em;
     }
-    &--medium{
-     font-size: 1em;
+    &--medium {
+      font-size: 1em;
     }
-    &--large{
-     font-size: 1.2em;
+    &--large {
+      font-size: 1.2em;
     }
 
     /* Colors */
-    &--primary{
+    &--primary {
       background-color: var(--primary);
     }
-    &--secondary{
+    &--secondary {
       background-color: var(--secondary);
     }
-    &--tertiary{
+    &--tertiary {
       background-color: var(--tertiary);
     }
   }
