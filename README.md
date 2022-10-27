@@ -1,3 +1,7 @@
+---
+projectLogo: assets/icon.svg
+---
+
 # Bemm
 
 ## Block\_\_Element--Modifier Maker
