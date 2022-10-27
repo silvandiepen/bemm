@@ -1,5 +1,6 @@
-import { BemmObject, BemmSettings } from "./types";
-export declare const bemm: (block: string, e: string | BemmObject | undefined, m: string | string[] | undefined, s: BemmSettings) => string | string[];
+import { BemmObject, BemmSettings, MultiBemmBlocks, MultiBemmObject } from "./types";
+export declare const bemm: (block: string, e: BemmObject["element"] | BemmObject, m: string | string[] | undefined, s: BemmSettings) => string | string[];
+export declare const createMultiBemm: (blocks: MultiBemmBlocks, baseSettings?: BemmSettings) => MultiBemmObject;
 export declare const createBemm: (block: string | string[], baseSettings?: BemmSettings) => Function;
 export declare class Bemm {
     block: string;
