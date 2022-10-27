@@ -8,12 +8,25 @@ import { toKebabCase } from "./helpers";
 
 const toBemmObject = (
   e: string | BemmObject | null,
+  m: string | string[],
   alt: BemmObject
 ): BemmObject => {
-  if (e !== null && typeof e == "object" && e.element && e.modifier) {
-    return e as BemmObject;
+  if (typeof e == "string" && m == "string") {
+    return {
+      element: e,
+      modifier: m,
+    };
+  } else if (typeof e == "object" && e?.element && e?.modifier) {
+    return {
+      element: e.element,
+      modifier: e.modifier,
+    };
   }
-  return alt;
+
+  return {
+    element: alt.element,
+    modifier: alt.modifier,
+  };
 };
 
 const toBemmSettings = (settings: BemmSettings): BemmSettings => {
@@ -31,16 +44,20 @@ export const bemm = (
   m: BemmObject["modifier"] = "",
   s: BemmSettings
 ): string | string[] => {
-  const { element, modifier } = toBemmObject(e, {
-    element: e || "",
-    modifier: m,
-  } as BemmObject);
+
+  if (block == "") return ``;
+ 
+  const { element, modifier } = toBemmObject(e, m, {
+    element: typeof e == "string" || e == null ? e : e.element,
+    modifier: typeof e == "string" || e == null ? m : e.modifier,
+  });
+
+  console.log({
+    e: element,
+    m: modifier,
+  });
 
   const settings = toBemmSettings(s);
-
-  if (block == "") {
-    return ``;
-  }
 
   const convertCase = (str: string): string => {
     if (settings.toKebabCase) str = toKebabCase(str);
