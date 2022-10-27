@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Bemm = exports.createBemm = exports.bemm = void 0;
+exports.Bemm = exports.createBemm = exports.createMultiBemm = exports.bemm = void 0;
 const helpers_1 = require("./helpers");
 const toBemmObject = (e, alt) => {
-    if (typeof e == "object" && e.element && e.modifier) {
+    if (e !== null && typeof e == "object" && e.element && e.modifier) {
         return e;
     }
     return alt;
@@ -13,7 +13,7 @@ const toBemmSettings = (settings) => {
 };
 const bemm = (block, e = "", m = "", s) => {
     const { element, modifier } = toBemmObject(e, {
-        element: e,
+        element: e || "",
         modifier: m,
     });
     const settings = toBemmSettings(s);
@@ -45,6 +45,14 @@ const bemm = (block, e = "", m = "", s) => {
             : classes;
 };
 exports.bemm = bemm;
+const createMultiBemm = (blocks, baseSettings = {}) => {
+    const bemms = {};
+    Object.keys(blocks).forEach((key) => {
+        bemms[key] = (0, exports.createBemm)(blocks[key], baseSettings);
+    });
+    return bemms;
+};
+exports.createMultiBemm = createMultiBemm;
 const createBemm = (block, baseSettings = {}) => (e = "", m = "", s) => {
     const settings = toBemmSettings(Object.assign(Object.assign({}, baseSettings), s));
     let classes = [];

@@ -49,6 +49,20 @@ describe("Style", () => {
         const bemm = (0, bemm_1.createBemm)("block");
         expect(bemm("element", "dark")).toEqual("block__element--dark");
     });
+    it("Should respond with the default class no element (empty string) with modifier", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        expect(bemm("", "dark")).toEqual("block--dark");
+    });
+    it("Should respond with the default class no element (undefined) with modifier", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const _ = undefined;
+        expect(bemm(_, "dark")).toEqual("block--dark");
+    });
+    it("Should respond with the default class no element (null) with modifier", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const _ = undefined;
+        expect(bemm(null, "dark")).toEqual("block--dark");
+    });
     it("Should respond with the default class with only modifier", () => {
         const bemm = (0, bemm_1.createBemm)("block");
         expect(bemm("", "dark")).toEqual("block--dark");
@@ -88,5 +102,22 @@ describe("Output", () => {
     });
     it("Should return with multiple with element and modifiers", () => {
         expect((0, bemm_1.bemm)("block", "test", ["blue", "black"], { returnArray: true })).toEqual(["block__test--blue", "block__test--black"]);
+    });
+});
+describe("createMultiBemm", () => {
+    it("Should return multiple Bemm scripts", () => {
+        const bemm = (0, bemm_1.createMultiBemm)({ block: "block", test: "testing" });
+        expect(bemm).toMatchObject({
+            block: expect.any(Function),
+            test: expect.any(Function),
+        });
+    });
+    it("Should return a value created by a multibemm function", () => {
+        const bemm = (0, bemm_1.createMultiBemm)({ block: "block", test: "testing" });
+        expect(bemm.test("")).toBe("testing");
+    });
+    it("Should return a class created by multibemm value with element", () => {
+        const bemm = (0, bemm_1.createMultiBemm)({ block: "block", test: "testing" });
+        expect(bemm.test("test")).toBe("testing__test");
     });
 });
