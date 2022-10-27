@@ -1,5 +1,7 @@
 ### Nuxt 3 Directive
 
+`bemmDirective.ts` directive
+
 ```js
 import { createBemm } from "bemm";
 
@@ -33,6 +35,39 @@ Usage:
     <div v-bemm="'element,modifier'">Some element with a modifier</div>
   </div>
 </template>
+```
+
+### Install as plugin in Nuxt3
+
+`bemm.js` plugin
+
+```js
+import { createBemm, createMultiBemm } from "bemm";
+
+export default defineNuxtPlugin((nuxtApp) => {
+  return {
+    provide: {
+      createBemm,
+      createMultiBemm,
+    },
+  };
+});
+```
+
+usage:
+
+```html
+<template>
+  <div :class="bemm()">
+    <div :class="bemm('child')"></div>
+  </div>
+</template>
+
+<script setup>
+  const { $createBemm } = useNuxtApp();
+
+  const bemm = $createBemm("block");
+</script>
 ```
 
 ### In a Vue component
