@@ -1,8 +1,16 @@
-import { BemmObject, BemmSettings } from "./types";
+import {
+  BemmObject,
+  BemmSettings,
+  MultiBemmBlocks,
+  MultiBemmObject,
+} from "./types";
 import { toKebabCase } from "./helpers";
 
-const toBemmObject = (e: string | BemmObject, alt: BemmObject): BemmObject => {
-  if (typeof e == "object" && e.element && e.modifier) {
+const toBemmObject = (
+  e: string | BemmObject | null,
+  alt: BemmObject
+): BemmObject => {
+  if (e !== null && typeof e == "object" && e.element && e.modifier) {
     return e as BemmObject;
   }
   return alt;
@@ -24,7 +32,7 @@ export const bemm = (
   s: BemmSettings
 ): string | string[] => {
   const { element, modifier } = toBemmObject(e, {
-    element: e,
+    element: e || "",
     modifier: m,
   } as BemmObject);
 
@@ -66,6 +74,19 @@ export const bemm = (
     : classes;
 };
 
+export const createMultiBemm = (
+  blocks: MultiBemmBlocks,
+  baseSettings: BemmSettings = {}
+): MultiBemmObject => {
+  const bemms: MultiBemmObject = {};
+
+  Object.keys(blocks).forEach((key) => {
+    bemms[key] = createBemm(blocks[key], baseSettings);
+  });
+
+  return bemms;
+};
+
 export const createBemm =
   (block: string | string[], baseSettings: BemmSettings = {}): Function =>
   (
@@ -90,7 +111,7 @@ export const createBemm =
       });
     }
     if (settings.returnString && !settings.returnArray)
-    return typeof classes == "string" ? classes : classes.join(" ");
+      return typeof classes == "string" ? classes : classes.join(" ");
     return settings.returnArray
       ? classes
       : classes.length == 1
@@ -116,7 +137,8 @@ export class Bemm {
       returnArray: true,
     });
 
-    if (this.settings.returnString && !this.settings.returnArray) return (classes as string[]).join(" ");
+    if (this.settings.returnString && !this.settings.returnArray)
+      return (classes as string[]).join(" ");
     return this.settings.returnArray
       ? classes
       : classes.length == 1

@@ -1,4 +1,4 @@
-import { Bemm, createBemm, bemm as BemmFunction } from "./bemm";
+import { Bemm, createBemm, createMultiBemm, bemm as BemmFunction } from "./bemm";
 
 describe("Class Component", () => {
   it("Should respond with the default class", () => {
@@ -53,7 +53,27 @@ describe("Style", () => {
   it("Should respond with the default class with modifier", () => {
     const bemm = createBemm("block");
     expect(bemm("element", "dark")).toEqual("block__element--dark");
+  });  
+  
+  it("Should respond with the default class no element (empty string) with modifier", () => {
+    const bemm = createBemm("block");
+    expect(bemm("", "dark")).toEqual("block--dark");
   });
+
+  
+  it("Should respond with the default class no element (undefined) with modifier", () => {
+    const bemm = createBemm("block");
+    const _ = undefined;
+    expect(bemm(_, "dark")).toEqual("block--dark");
+  });
+
+  it("Should respond with the default class no element (null) with modifier", () => {
+    const bemm = createBemm("block");
+    const _ = undefined;
+    expect(bemm(null, "dark")).toEqual("block--dark");
+  });
+
+
   it("Should respond with the default class with only modifier", () => {
     const bemm = createBemm("block");
     expect(bemm("", "dark")).toEqual("block--dark");
@@ -84,7 +104,9 @@ describe("Style", () => {
   });
   it("Should return with multiple with element and modifiers", () => {
     const bemm = createBemm(["block1", "block2"]);
-    expect(bemm("test", ["blue", "black"], { returnString: true })).toBe("block1__test--blue block1__test--black block2__test--blue block2__test--black");
+    expect(bemm("test", ["blue", "black"], { returnString: true })).toBe(
+      "block1__test--blue block1__test--black block2__test--blue block2__test--black"
+    );
   });
 });
 
@@ -98,5 +120,26 @@ describe("Output", () => {
     expect(
       BemmFunction("block", "test", ["blue", "black"], { returnArray: true })
     ).toEqual(["block__test--blue", "block__test--black"]);
+  });
+});
+
+describe("createMultiBemm", () => {
+  it("Should return multiple Bemm scripts", () => {
+    const bemm = createMultiBemm({ block: "block", test: "testing" });
+
+    expect(bemm).toMatchObject({
+      block: expect.any(Function),
+      test: expect.any(Function),
+    });
+  });
+  it("Should return a value created by a multibemm function", () => {
+    const bemm = createMultiBemm({ block: "block", test: "testing" });
+
+    expect(bemm.test("")).toBe("testing");
+  });
+  it("Should return a class created by multibemm value with element", () => {
+    const bemm = createMultiBemm({ block: "block", test: "testing" });
+
+    expect(bemm.test("test")).toBe("testing__test");
   });
 });
