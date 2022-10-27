@@ -30,10 +30,6 @@ const bemm = (block, e = "", m = "", s) => {
         element: typeof e == "string" || e == null ? e : e.element,
         modifier: typeof e == "string" || e == null ? m : e.modifier,
     });
-    console.log({
-        e: element,
-        m: modifier,
-    });
     const settings = toBemmSettings(s);
     const convertCase = (str) => {
         if (settings.toKebabCase)
