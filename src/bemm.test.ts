@@ -1,4 +1,9 @@
-import { Bemm, createBemm, createMultiBemm, bemm as BemmFunction } from "./bemm";
+import {
+  Bemm,
+  createBemm,
+  createMultiBemm,
+  bemm as BemmFunction,
+} from "./bemm";
 
 describe("Class Component", () => {
   it("Should respond with the default class", () => {
@@ -53,14 +58,13 @@ describe("Style", () => {
   it("Should respond with the default class with modifier", () => {
     const bemm = createBemm("block");
     expect(bemm("element", "dark")).toEqual("block__element--dark");
-  });  
-  
+  });
+
   it("Should respond with the default class no element (empty string) with modifier", () => {
     const bemm = createBemm("block");
     expect(bemm("", "dark")).toEqual("block--dark");
   });
 
-  
   it("Should respond with the default class no element (undefined) with modifier", () => {
     const bemm = createBemm("block");
     const _ = undefined;
@@ -72,7 +76,6 @@ describe("Style", () => {
     const _ = undefined;
     expect(bemm(null, "dark")).toEqual("block--dark");
   });
-
 
   it("Should respond with the default class with only modifier", () => {
     const bemm = createBemm("block");
@@ -141,5 +144,31 @@ describe("createMultiBemm", () => {
     const bemm = createMultiBemm({ block: "block", test: "testing" });
 
     expect(bemm.test("test")).toBe("testing__test");
+  });
+});
+
+describe("createBemm from Object", () => {
+  it("Should return a valid bemm class", () => {
+    const bemm = createBemm("block");
+    const bemmClass = bemm({ element: "", modifier: "" });
+
+    expect(bemmClass).toBe("block");
+
+  });  it("Should return a valid bemm class - with element", () => {
+    const bemm = createBemm("block");
+    const bemmClass = bemm({ element: "test", modifier: "" });
+    expect(bemmClass).toBe("block__test");
+  });
+  it("Should return a valid bemm class - with modifier", () => {
+    const bemm = createBemm("block");
+    const bemmClass = bemm({ element: "", modifier: "modified" });
+
+    expect(bemmClass).toBe("block--modified");
+  });
+  it("Should return a valid bemm class - with element and modifier", () => {
+    const bemm = createBemm("block");
+    const bemmClass = bemm({ element: "test", modifier: "modified" });
+
+    expect(bemmClass).toBe("block__test--modified");
   });
 });

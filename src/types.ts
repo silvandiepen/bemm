@@ -1,5 +1,5 @@
 export interface BemmObject {
-  element: string | undefined | null;
+  element: string;
   modifier: string | string[];
 }
 
