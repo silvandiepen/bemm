@@ -52,11 +52,6 @@ export const bemm = (
     modifier: typeof e == "string" || e == null ? m : e.modifier,
   });
 
-  console.log({
-    e: element,
-    m: modifier,
-  });
-
   const settings = toBemmSettings(s);
 
   const convertCase = (str: string): string => {

@@ -2,24 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bemm = exports.createBemm = exports.createMultiBemm = exports.bemm = void 0;
 const helpers_1 = require("./helpers");
-const toBemmObject = (e, alt) => {
-    if (e !== null && typeof e == "object" && e.element && e.modifier) {
-        return e;
+const toBemmObject = (e, m, alt) => {
+    if (typeof e == "string" && m == "string") {
+        return {
+            element: e,
+            modifier: m,
+        };
     }
-    return alt;
+    else if (typeof e == "object" && (e === null || e === void 0 ? void 0 : e.element) && (e === null || e === void 0 ? void 0 : e.modifier)) {
+        return {
+            element: e.element,
+            modifier: e.modifier,
+        };
+    }
+    return {
+        element: alt.element,
+        modifier: alt.modifier,
+    };
 };
 const toBemmSettings = (settings) => {
     return Object.assign({ toKebabCase: true, returnArray: false, returnString: false }, settings);
 };
 const bemm = (block, e = "", m = "", s) => {
-    const { element, modifier } = toBemmObject(e, {
-        element: e || "",
-        modifier: m,
+    if (block == "")
+        return ``;
+    const { element, modifier } = toBemmObject(e, m, {
+        element: typeof e == "string" || e == null ? e : e.element,
+        modifier: typeof e == "string" || e == null ? m : e.modifier,
     });
     const settings = toBemmSettings(s);
-    if (block == "") {
-        return ``;
-    }
     const convertCase = (str) => {
         if (settings.toKebabCase)
             str = (0, helpers_1.toKebabCase)(str);

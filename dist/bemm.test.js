@@ -121,3 +121,25 @@ describe("createMultiBemm", () => {
         expect(bemm.test("test")).toBe("testing__test");
     });
 });
+describe("createBemm from Object", () => {
+    it("Should return a valid bemm class", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const bemmClass = bemm({ element: "", modifier: "" });
+        expect(bemmClass).toBe("block");
+    });
+    it("Should return a valid bemm class - with element", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const bemmClass = bemm({ element: "test", modifier: "" });
+        expect(bemmClass).toBe("block__test");
+    });
+    it("Should return a valid bemm class - with modifier", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const bemmClass = bemm({ element: "", modifier: "modified" });
+        expect(bemmClass).toBe("block--modified");
+    });
+    it("Should return a valid bemm class - with element and modifier", () => {
+        const bemm = (0, bemm_1.createBemm)("block");
+        const bemmClass = bemm({ element: "test", modifier: "modified" });
+        expect(bemmClass).toBe("block__test--modified");
+    });
+});
