@@ -37,25 +37,6 @@ render`
 </div>
 ```
 
-You can do the same as a Class, if you really want to.
-
-```js
-import { Bemm } from "bemm";
-
-const bem = new Bemm("block");
-
-render`
-    <div class="${bem.m()}">
-        <div class="${bem.m("inner")}></div>
-    </div>
-`;
-```
-
-```html
-<div class="block">
-  <div class="block__inner"></div>
-</div>
-```
 
 ### How
 

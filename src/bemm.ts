@@ -38,15 +38,14 @@ const toBemmSettings = (settings: BemmSettings): BemmSettings => {
   };
 };
 
-export const bemm = (
+export const makeBem = (
   block: string,
   e: BemmObject["element"] | BemmObject = "",
   m: BemmObject["modifier"] = "",
   s: BemmSettings
 ): string | string[] => {
-
   if (block == "") return ``;
- 
+
   const { element, modifier } = toBemmObject(e, m, {
     element: typeof e == "string" || e == null ? e : e.element,
     modifier: typeof e == "string" || e == null ? m : e.modifier,
@@ -86,7 +85,7 @@ export const bemm = (
     : classes;
 };
 
-export const createMultiBemm = (
+export const createBemms = (
   blocks: MultiBemmBlocks,
   baseSettings: BemmSettings = {}
 ): MultiBemmObject => {
@@ -110,7 +109,7 @@ export const createBemm =
 
     let classes: string[] = [];
     if (typeof block == "string") {
-      classes = bemm(block, e, m, {
+      classes = makeBem(block, e, m, {
         ...settings,
         returnArray: true,
       }) as string[];
@@ -118,7 +117,10 @@ export const createBemm =
       block.forEach((b) => {
         classes = [
           ...classes,
-          ...(bemm(b, e, m, { ...settings, returnArray: true }) as string[]),
+          ...(makeBem(b, e, m, {
+            ...settings,
+            returnArray: true,
+          }) as string[]),
         ];
       });
     }
@@ -130,33 +132,3 @@ export const createBemm =
       ? classes[0]
       : classes;
   };
-
-export class Bemm {
-  block: string = "";
-  settings: BemmSettings = {};
-
-  constructor(block: string, settings: BemmSettings = {}) {
-    this.block = block;
-    this.settings = settings;
-  }
-
-  m(
-    e: BemmObject["element"] | BemmObject = "",
-    m: BemmObject["modifier"] = ""
-  ): string | string[] {
-    const classes = bemm(this.block, e, m, {
-      ...this.settings,
-      returnArray: true,
-    });
-
-    if (this.settings.returnString && !this.settings.returnArray)
-      return (classes as string[]).join(" ");
-    return this.settings.returnArray
-      ? classes
-      : classes.length == 1
-      ? classes[0]
-      : classes;
-  }
-}
-
-export default bemm;
