@@ -8,15 +8,16 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsup src/index.ts --format cjs,esm && tsc",
+    "build": "rimraf dist && tsup --dts-resolve",
     "prepublishOnly": "npm run build && npm run test"
   },
   "exports": {
     ".": {
-      "require": "dist/index.cjs",
-      "import": "dist/index.mjs"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     }
   },
+  "types": "./dist/index.d.ts",
   "keywords": [
     "Bem",
     "class",
@@ -31,6 +32,7 @@
     "typescript": "^4.5.5"
   },
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "tsup": "^6.3.0"
   }
 }
