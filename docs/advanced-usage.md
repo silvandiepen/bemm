@@ -18,10 +18,10 @@ render`<div class="${bem("background", ["primary", "ghost"])}"></div>`;
 
 ### Multiple blocks
 
-When you have multiple blocks in one component and you want to define multiple Bemm functions. You can do this using the `createMultiBemm` function.
+When you have multiple blocks in one component and you want to define multiple Bemm functions. You can do this using the `createBemms` function.
 
 ```js
-const bemm = createMultiBemm({
+const bemm = createBemms({
   block: 'block-element',
   template: 'templates',
   article: 'articles'
