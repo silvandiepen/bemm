@@ -5,8 +5,7 @@ export interface BemmObject {
 
 export interface BemmSettings {
   toKebabCase?: boolean;
-  returnArray?: boolean;
-  returnString?: boolean;
+  return?: "array" | "string" | "auto";
 }
 
 export interface MultiBemmObject {
@@ -45,8 +44,7 @@ const toBemmObject = (
 const toBemmSettings = (settings: BemmSettings): BemmSettings => {
   return {
     toKebabCase: true,
-    returnArray: false,
-    returnString: false,
+    return: "auto",
     ...settings,
   };
 };
@@ -79,7 +77,11 @@ export const makeBem = (
 
   if (typeof modifier == "object") {
     modifier.forEach((mod: string) => {
-      classes.push(`${elementClass}--${convertCase(mod)}`);
+      classes.push(
+        convertCase(mod).length
+          ? `${elementClass}--${convertCase(mod)}`
+          : `${elementClass}`
+      );
     });
   } else {
     let className = `${elementClass}${
@@ -89,13 +91,15 @@ export const makeBem = (
     classes.push(className);
   }
 
-  if (settings.returnString && !settings.returnArray)
-    return typeof classes == "string" ? classes : classes.join(" ");
-  return settings.returnArray
-    ? classes
-    : classes.length == 1
-    ? classes[0]
-    : classes;
+  switch (settings.return) {
+    case "string":
+      return classes.join(" ");
+    case "array":
+      return classes;
+    default:
+    case "auto":
+      return classes.length == 1 ? classes[0] : classes;
+  }
 };
 
 export const createBemms = (
@@ -124,7 +128,7 @@ export const createBemm =
     if (typeof block == "string") {
       classes = makeBem(block, e, m, {
         ...settings,
-        returnArray: true,
+        return: "array",
       }) as string[];
     } else {
       block.forEach((b) => {
@@ -132,16 +136,19 @@ export const createBemm =
           ...classes,
           ...(makeBem(b, e, m, {
             ...settings,
-            returnArray: true,
+            return: "array",
           }) as string[]),
         ];
       });
     }
-    if (settings.returnString && !settings.returnArray)
-      return typeof classes == "string" ? classes : classes.join(" ");
-    return settings.returnArray
-      ? classes
-      : classes.length == 1
-      ? classes[0]
-      : classes;
+
+    switch (settings.return) {
+      case "string":
+        return classes.join(" ");
+      case "array":
+        return classes;
+      default:
+      case "auto":
+        return classes.length == 1 ? classes[0] : classes;
+    }
   };

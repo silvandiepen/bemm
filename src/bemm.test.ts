@@ -1,9 +1,4 @@
-import {
-  createBemm,
-  createBemms,
-  makeBem,
-} from "./bemm";
-
+import { createBemm, createBemms, makeBem } from "./bemm";
 
 describe("Style", () => {
   it("Should respond with the default class", () => {
@@ -66,22 +61,35 @@ describe("Style", () => {
   });
   it("Should return with multiple with element and modifiers", () => {
     const bemm = createBemm(["block1", "block2"]);
-    expect(bemm("test", ["blue", "black"], { returnString: true })).toBe(
+    expect(bemm("test", ["blue", "black"], { return: 'string' })).toBe(
       "block1__test--blue block1__test--black block2__test--blue block2__test--black"
     );
   });
 });
 
+
 describe("Output", () => {
   it("Should return a string with multiple modifiers", () => {
     expect(
-      makeBem("block", "test", ["blue", "black"], { returnString: true })
+      makeBem("block", "test", ["blue", "black"], { return: "string" })
     ).toBe("block__test--blue block__test--black");
   });
   it("Should return with multiple with element and modifiers", () => {
     expect(
-      makeBem("block", "test", ["blue", "black"], { returnArray: true })
+      makeBem("block", "test", ["blue", "black"], { return: "array" })
     ).toEqual(["block__test--blue", "block__test--black"]);
+  });
+  it("should return a string of multiple outputs as string", () => {
+    const bemm = createBemm("block", { return: "string" });
+    expect(bemm("test", ["something", "black"])).toBe(
+      "block__test--something block__test--black"
+    );
+  });
+  it("should return a string of multiple outputs as string", () => {
+    const bemm = createBemm("block", { return: "string" });
+    expect(bemm("test", ["", "black"])).toBe(
+      "block__test block__test--black"
+    );
   });
 });
 

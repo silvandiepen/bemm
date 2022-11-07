@@ -1,23 +1,19 @@
 # Settings
 
-
 ### Available Settings
 
 Available settings:
 
-| setting        | default | description                           |
-| -------------- | ------- | ------------------------------------- |
-| `toKebabCase`  | `true`  | Converts all elements to `kebab-case` |
-| `returnArray`  | `false` | Always returns an array               |
-| `returnString` | `false` | Always returns a string               |
+| setting       | default | description                                                                                                                                                                              |
+| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `toKebabCase` | `true`  | Converts all elements to `kebab-case`                                                                                                                                                    |
+| `return`      | `auto`  | By default the output will be determinded by the amount of classes, 1 class will be a string and multiple an array. You can fix this by defining `string` or `array` as the return value |
 
 Usage of settings:
 
 ```js
 const bemm = createBemm("my-button", { toKebabCase: true });
 ```
-
-
 
 #### KebabCase
 
