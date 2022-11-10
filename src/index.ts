@@ -1,2 +1,2 @@
-export * from "./bemm";
-// export * from "./types";
+export { createBemm, createBemms, makeBem } from "./bemm";
+export { classes } from "./classes";
