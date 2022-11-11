@@ -1,42 +1,13 @@
-import { classes, filterDirt, isMixedInput, isStringArray } from "./classes";
-import { createBemm } from "bemm";
-const bemm = createBemm("block");
+import {
+  classNames as c,
+  isMixedInput,
+} from "./classNames";
 
-describe("filterDirt", () => {
-  it("A single string", () => {
-    const input = filterDirt(["block1", "block2"]);
-    const output = ["block1", "block2"];
+import { useBemm } from "./useBemm";
 
-    expect(input).toEqual(output);
-  });
-  it("A Double string", () => {
-    const input = filterDirt(["block1 block2", "block3"]);
-    const output = ["block1", "block2", "block3"];
+const bemm = useBemm("block");
 
-    expect(input).toEqual(output);
-  });
-  it("A undefined string", () => {
-    const input = filterDirt(["block1 block2", undefined, false, "block3"]);
-    const output = ["block1", "block2", "block3"];
 
-    expect(input).toEqual(output);
-  });
-});
-
-describe("isStringArray", () => {
-  it("Wrong values - a string", () => {
-    expect(isStringArray("something")).toEqual(false);
-  });
-  it("Wrong values - a number", () => {
-    expect(isStringArray(1)).toEqual(false);
-  });
-  it("Wrong values - a array with unaccepted chars", () => {
-    expect(isStringArray([1, 2])).toEqual(false);
-  });
-  it("Wrong values - a string array", () => {
-    expect(isStringArray(["something"])).toEqual(true);
-  });
-});
 
 describe("isMixedInput", () => {
   it("Wrong values - a string", () => {
@@ -58,25 +29,25 @@ describe("isMixedInput", () => {
 
 describe("Classes from base string", () => {
   it("A single string", () => {
-    const input = classes("string");
+    const input = c("string");
     const output = "string";
 
     expect(input).toEqual(output);
   });
   it("A single string", () => {
-    const input = classes("string");
+    const input = c("string");
     const output = "string";
 
     expect(input).toEqual(output);
   });
   it("Multiple strings - bemm", () => {
-    const input = classes(bemm("el"));
+    const input = c(bemm("el"));
     const output = "block__el";
 
     expect(input).toEqual(output);
   });
   it("Multiple strings - bemm", () => {
-    const input = classes(bemm("el", ["", "mod"], { return: "string" }));
+    const input = c(bemm("el", ["", "mod"], { return: "string" }));
 
     const output = "block__el block__el--mod";
 
@@ -86,7 +57,7 @@ describe("Classes from base string", () => {
 
 describe("Classes from Object", () => {
   it("A single string", () => {
-    const input = classes({
+    const input = c({
       block1: false,
       block2: true,
     });
@@ -98,7 +69,7 @@ describe("Classes from Object", () => {
 
 describe("Classes from Mixed", () => {
   it("A single string", () => {
-    const input = classes([
+    const input = c([
       "test1",
       ["test2", "test3"],
       {
@@ -111,13 +82,13 @@ describe("Classes from Mixed", () => {
     expect(input).toEqual(output);
   });
   it("A single string", () => {
-    const input = classes([
+    const input = c([
       "test1",
       ["test2", "test3", false, 4],
       {
         block1: false,
         block2: true,
-        'block-3': 1 == 1
+        "block-3": 1 == 1,
       },
     ]);
     const output = "test1 test2 test3 block2 block-3";

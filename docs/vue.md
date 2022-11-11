@@ -5,14 +5,14 @@
 `bemmDirective.ts` directive
 
 ```js
-import { createBemm } from "bemm";
+import { generateBemm } from "bemm";
 
-let bemm = createBemm("");
+let bemm = generateBemm("");
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.directive("bemm-block", {
     created(el, binding) {
-      bemm = createBemm(binding.value);
+      bemm = generateBemm(binding.value);
       el.classList = bemm();
     },
   });
@@ -44,12 +44,12 @@ Usage:
 `bemm.js` plugin
 
 ```js
-import { createBemm, createMultiBemm } from "bemm";
+import { generateBemm, createMultiBemm } from "bemm";
 
 export default defineNuxtPlugin((nuxtApp) => {
   return {
     provide: {
-      createBemm,
+      generateBemm,
       createMultiBemm,
     },
   };
@@ -66,9 +66,9 @@ usage:
 </template>
 
 <script setup>
-  const { $createBemm } = useNuxtApp();
+  const { $generateBemm } = useNuxtApp();
 
-  const bemm = $createBemm("block");
+  const bemm = $generateBemm("block");
 </script>
 ```
 
@@ -83,7 +83,7 @@ usage:
 
 <script lang="ts">
   import { defineComponent, PropType } from "vue";
-  import { createBemm } from "bemm";
+  import { generateBemm } from "bemm";
 
   enum ButtonSize {
     SMALL: 'small',
@@ -108,7 +108,7 @@ usage:
       }
     },
     setup(props){
-      const bemm = createBemm('my-button');
+      const bemm = generateBemm('my-button');
 
       return {
         bemm,

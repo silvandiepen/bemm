@@ -13,7 +13,7 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
+      "require": "./dist/classes.js",
       "import": "./dist/index.mjs"
     }
   },

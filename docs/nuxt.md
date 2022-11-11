@@ -31,7 +31,7 @@ Usage in any component;
 </template>
 
 <script setup>
-  const bemm = createBemm("my-block");
+  const bemm = generateBemm("my-block");
 </script>
 ```
 
@@ -52,9 +52,9 @@ export default defineNuxtConfig({
   modules: ["nuxt-bemm"],
   bemm: {
     prefix: "use",
-    prefixSkip: ["createBemms"],
+    prefixSkip: ["generateBemms"],
     exclude: [],
-    alias: [["createBemms", "createMultipleBemms"]],
+    alias: [["generateBemms", "createMultipleBemms"]],
     upperAfterPrefix: true,
   },
 });

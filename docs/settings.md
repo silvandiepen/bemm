@@ -12,7 +12,7 @@ Available settings:
 Usage of settings:
 
 ```js
-const bemm = createBemm("my-button", { toKebabCase: true });
+const bemm = generateBemm("my-button", { toKebabCase: true });
 ```
 
 #### KebabCase
@@ -22,11 +22,11 @@ By default all elements of the class will be converted automatically to `kebab-c
 You can change this by fixing the settings at initialisation.
 
 ```js
-const bemm1 = createBemm("myButton");
+const bemm1 = generateBemm("myButton");
 
 bemm1("Container"); // `.my-button__container`
 
-const bemm2 = createBemm("myButton", {
+const bemm2 = generateBemm("myButton", {
   toKebabCase: false,
 });
 

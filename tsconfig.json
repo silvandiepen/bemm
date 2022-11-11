@@ -3,7 +3,7 @@
     "target": "es2016",
     "module": "amd",
     "lib": ["es5", "es6", "dom"],
-    "rootDir": "./src/",
+    "rootDir": "./src",
     "outFile": "./dist/bemm.ts.js",
     // "outDir": "dist",
     "declaration": true,
@@ -12,5 +12,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "moduleResolution":"node",
   }
 }
