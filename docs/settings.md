@@ -1,3 +1,8 @@
+---
+projectLogo: assets/icon.svg
+projectTitle: BEMM
+---
+
 # Settings
 
 ### Available Settings

@@ -154,4 +154,15 @@ describe("useBemm from Object", () => {
 
     expect(bemmClass).toBe("");
   });
+
+  describe("Combined functions from useBemm", () => {
+    it("Should return a valid bemm class", () => {
+      const { bemm, classes } = useBemm("block");
+      const bemmClass = bemm({ element: "", modifier: "" });
+      const bemmClasses = classes({ e: "", m: "test" }, "test");
+
+      expect(bemmClass).toBe("block");
+      expect(bemmClasses).toEqual(["block--test", "block__test"]);
+    });
+  });
 });

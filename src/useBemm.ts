@@ -1,12 +1,12 @@
 import { toKebabCase, undefinedIsTrue } from "./helpers";
-
+import { useClasses, type useClassesReturnType } from "./useClasses";
 /*
  *
  * Types
  *
  */
 export interface BemmObject {
-  element: string;
+  element: string | null;
   modifier: string | string[];
   show?: boolean;
 }
@@ -161,12 +161,25 @@ export const useBemms = (
  *
  */
 
-export const useBemm =
-  (block: string | string[], baseSettings: BemmSettings = {}): Function =>
-  (
+type bemmReturnType = (
+  e?: BemmObject["element"] | BemmObject,
+  m?: BemmObject["modifier"],
+  s?: BemmSettings
+) => {};
+
+interface useBemmReturnType {
+  bemm: bemmReturnType;
+  classes: Function;
+}
+
+export const useBemm = (
+  block: string | string[],
+  baseSettings: BemmSettings = {}
+): useBemmReturnType & bemmReturnType => {
+  const bemm = (
     e: BemmObject["element"] | BemmObject = "",
     m: BemmObject["modifier"] = "",
-    s: BemmSettings
+    s: BemmSettings = {}
   ): string | string[] => {
     const settings = toBemmSettings({ ...baseSettings, ...s });
 
@@ -202,3 +215,9 @@ export const useBemm =
         return classes.length == 1 ? classes[0] : classes;
     }
   };
+
+  bemm.bemm = bemm;
+  bemm.classes = useClasses(block, baseSettings);
+
+  return bemm;
+};

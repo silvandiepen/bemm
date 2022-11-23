@@ -1,12 +1,37 @@
-import { generateBemm, BemmReturn, returnValues } from "./useBemm";
+import { generateBemm, returnValues } from "./useBemm";
 import { isArray, isStringArray, isString, cleanArray } from "./helpers";
-import { BemmObject, BemmSettings } from "useBemm";
+// import type { BemmObjectAllowed, BemmSettings } from "./useBemm";
 
 /*
  *
  * Types
  *
  */
+
+export const BemmReturn = {
+  ARRAY: "array",
+  STRING: "string",
+  AUTO: "auto",
+} as const;
+
+export type BemmReturn = typeof BemmReturn[keyof typeof BemmReturn];
+
+export interface BemmSettings {
+  toKebabCase?: boolean;
+  return?: BemmReturn;
+}
+export interface BemmObject {
+  element: string;
+  modifier: string | string[];
+  show?: boolean;
+}
+export interface BemmObjectAllowed extends BemmObject {
+  block: string;
+  b: string;
+  e: string;
+  m: string | string[];
+  s: boolean;
+}
 
 const InputType = {
   STRING: "string",
@@ -46,11 +71,22 @@ const isBemmObject = (input: any): boolean => {
   if (typeof input !== "object" && !Array.isArray(input) && input !== null)
     return false;
 
-  if (input.element) {
-    return true;
-  }
+  const allowedKeys = [
+    "b",
+    "block",
+    "e",
+    "element",
+    "m",
+    "modifier",
+    "s",
+    "show",
+  ];
 
-  return false;
+  let isAllowed = ![
+    ...new Set(Object.keys(input).find((v) => !allowedKeys.includes(v))),
+  ].length;
+
+  return isAllowed;
 };
 
 const isAcceptedArray = (input: any): boolean => {
@@ -120,14 +156,23 @@ const classesFromString = (
 
 const classesFromObject = (
   block: string,
-  input: BemmObject,
+  input: Partial<BemmObjectAllowed>,
   settings: BemmSettings = {}
 ): string[] => {
-  if (input.show !== undefined && !input.show) {
+  if (
+    (input.show !== undefined && !input.show) ||
+    (input.s !== undefined && !input.s)
+  ) {
     return [];
   }
-  const bemmObject = { element: input.element, modifier: input.modifier };
-  return generateBemm(block, bemmObject, "", {
+
+  const b = input?.block || input.b || block;
+  const bemmObject = {
+    element: input.element || input.e || "",
+    modifier: input.modifier || input.m || "",
+  };
+
+  return generateBemm(b, bemmObject, "", {
     ...settings,
     return: BemmReturn.ARRAY,
   }) as string[];
@@ -140,6 +185,8 @@ const classesFromObject = (
  */
 
 const getInputType = (input: any): InputType => {
+  if (input == null) return InputType.NONE;
+
   if (isString(input) && input !== "") {
     return InputType.STRING;
   }
@@ -161,34 +208,48 @@ const getInputType = (input: any): InputType => {
  * The Function
  *
  */
+
+export type useClassesReturnType = Function;
+type useClassesInputType = (
+  | null
+  | string
+  | [string, (string[] | string)?, boolean?]
+  | { element: string; modifier?: string }
+)[];
+
 export const useClasses = (
-  block: string,
+  block: string | string[],
   settings: BemmSettings = {}
-): Function => {
-  return (
-    ...args: (
-      | null
-      | string
-      | [string, (string[] | string)?, boolean?]
-      | { element: string; modifier?: string }
-    )[]
-  ) => {
+): useClassesReturnType => {
+  const classes = (...args: useClassesInputType): string | string[] => {
+    const blocks = typeof block == "string" ? [block] : block;
+
     let classes: string[] = [];
 
-    args.forEach((arg: any) => {
-      switch (getInputType(arg)) {
-        case InputType.STRING:
-          classes.push(...classesFromString(block, arg, settings));
-          break;
-        case InputType.ARRAY:
-          classes.push(...classesFromArray(block, arg, settings));
-          break;
-        case InputType.OBJECT:
-          classes.push(...classesFromObject(block, arg, settings));
-          break;
+    blocks.forEach((b) => {
+      if (args.length == 0 || args[0] == null || args[0] == "") {
+        classes.push(
+          generateBemm(b, "", "", { return: BemmReturn.STRING }) as string
+        );
       }
+
+      args.forEach((arg: any) => {
+        switch (getInputType(arg)) {
+          case InputType.STRING:
+            classes.push(...classesFromString(b, arg, settings));
+            break;
+          case InputType.ARRAY:
+            classes.push(...classesFromArray(b, arg, settings));
+            break;
+          case InputType.OBJECT:
+            classes.push(...classesFromObject(b, arg, settings));
+            break;
+        }
+      });
     });
 
     return returnValues(cleanArray(classes), settings);
   };
+
+  return classes;
 };

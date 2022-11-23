@@ -45,3 +45,17 @@ export const undefinedIsTrue = (value: any): boolean => {
   if (value !== undefined) return !!value;
   return false;
 };
+
+export const isNumber = (input: any): boolean => {
+  return !isNaN(input) && Number.isInteger(input);
+};
+
+export const arrayHasNumber = (input: any): boolean => {
+  if (!Array.isArray(input)) return false;
+
+  input.forEach((v) => {
+    if (typeof v == "number") return true;
+  });
+
+  return false;
+};

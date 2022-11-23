@@ -1,7 +1,3 @@
----
-projectLogo: assets/icon.svg
----
-
 # Bemm
 
 ## Block\_\_Element--Modifier Maker
@@ -33,6 +29,63 @@ render`
 
 ```html
 <div class="block">
+  <div class="block__inner"></div>
+</div>
+```
+
+**Vue example**
+
+```vue
+<template>
+  <div :class="bemm()">
+    <div :class="bemm('child')"></div>
+  </div>
+</template>
+
+<script setup>
+const bemm = useBemm("block");
+</script>
+```
+
+**React example**
+
+```js
+class Example extends React.Component {
+
+  const bemm = useBemm('block', {
+    return: 'string'
+  });
+
+  render() {
+    return (
+      <div className={bemm()}>
+        <div className={bemm("child")}></div>
+      </div>
+    );
+  }
+}
+```
+
+**Multiple functions in once**
+
+You can also use the spread method to get the bemm and [/docs/useClasses](classes) functions in one declration from useBemm, in this way you can use both, with the same block.
+
+```js
+import { useBemm } from "bemm";
+
+const { bemm, classes } = useBemm("block");
+
+const mainClasses = classes("", ["something"], "to", { m: "add" });
+
+render`
+    <div class="${mainClasses}">
+        <div class="${bemm("inner")}></div>
+    </div>
+`;
+```
+
+```html
+<div class="block block__something block__to block--add">
   <div class="block__inner"></div>
 </div>
 ```

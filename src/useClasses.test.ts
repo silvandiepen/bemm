@@ -4,9 +4,27 @@ describe("useClasses", () => {
   it("Create multiple classes easily - strings", () => {
     const cls = useClasses("block");
 
-    const input = cls("test", "test2", "test3:modifier");
+    const input = cls("test", "test2");
 
-    const output = ["block__test", "block__test2", "block__test3--modifier"];
+    const output = ["block__test", "block__test2"];
+
+    expect(input).toEqual(output);
+  });
+  it("Create multiple classes easily - strings with modifier", () => {
+    const cls = useClasses("block");
+
+    const input = cls("test", "test2:modifier");
+
+    const output = ["block__test", "block__test2--modifier"];
+
+    expect(input).toEqual(output);
+  });
+  it("Create multiple classes easily - strings with modifier no element", () => {
+    const cls = useClasses("block");
+
+    const input = cls("test", ":modifier");
+
+    const output = ["block__test", "block--modifier"];
 
     expect(input).toEqual(output);
   });
@@ -52,6 +70,43 @@ describe("useClasses", () => {
 
     expect(input).toEqual(output);
   });
+  it("Create multiple classes easily - objects shorthanded", () => {
+    const cls = useClasses("block");
+
+    const input = cls(
+      { e: "block" },
+      { e: "block", m: "modifier" },
+      { e: "block", m: "modifier1", s: true },
+      { e: "block", m: "modifier2", s: false }
+    );
+
+    const output = [
+      "block__block",
+      "block__block--modifier",
+      "block__block--modifier1",
+    ];
+
+    expect(input).toEqual(output);
+  });
+  it("Create classes with Object, change block", () => {
+    const cls = useClasses("block");
+
+    const input = cls(
+      { block: "Another" },
+      { block: "Another", element: "element" },
+      { b: "Another2", e: "element" },
+      { element: "element" }
+    );
+
+    const output = [
+      "another",
+      "another__element",
+      "another2__element",
+      "block__element",
+    ];
+
+    expect(input).toEqual(output);
+  });
   it("Create multiple classes easily - mixed", () => {
     const cls = useClasses("block");
 
@@ -73,9 +128,9 @@ describe("useClasses", () => {
 
     expect(input).toEqual(output);
   });
-  
+
   it("Create multiple classes easily - mixed - string return", () => {
-    const cls = useClasses("block", { return: "string"});
+    const cls = useClasses("block", { return: "string" });
 
     const input = cls(
       ["element Yeah"],
@@ -85,7 +140,8 @@ describe("useClasses", () => {
       { element: "block", modifier: "modifier" }
     );
 
-    const output = "block__element-yeah block__element2--modifier2 block__test block__block block__block--modifier";
+    const output =
+      "block__element-yeah block__element2--modifier2 block__test block__block block__block--modifier";
 
     expect(input).toEqual(output);
   });
@@ -121,6 +177,63 @@ describe("useClasses", () => {
     );
 
     const output = "block__element2--modifier2";
+
+    expect(input).toEqual(output);
+  });
+
+  it("Get the block class - when empty", () => {
+    const bemm = useClasses("block");
+
+    const input = bemm();
+
+    const output = "block";
+
+    expect(input).toEqual(output);
+  });
+
+  it("Get the block class - when first is null", () => {
+    const bemm = useClasses("block");
+
+    const input = bemm(null, "test");
+
+    const output = ["block", "block__test"];
+
+    expect(input).toEqual(output);
+  });
+  it("Get the block class - when first is empty string", () => {
+    const bemm = useClasses("block");
+
+    const input = bemm("", "test");
+
+    const output = ["block", "block__test"];
+
+    expect(input).toEqual(output);
+  });
+  it("Get the block class - when first is empty array", () => {
+    const bemm = useClasses("block");
+
+    const input = bemm([""], "test");
+
+    const output = ["block", "block__test"];
+
+    expect(input).toEqual(output);
+  });
+  it("Get the block class - when first is empty array", () => {
+    const bemm = useClasses("block");
+
+    const input = bemm([], "test");
+
+    const output = ["block", "block__test"];
+
+    expect(input).toEqual(output);
+  });
+
+  it("Get the classes, with multiple block classes", () => {
+    const bemm = useClasses(["block", "block1"]);
+
+    const input = bemm([], "test");
+
+    const output = ["block", "block__test", 'block1', 'block1__test'];
 
     expect(input).toEqual(output);
   });

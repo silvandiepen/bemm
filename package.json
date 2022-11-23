@@ -8,16 +8,17 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "rimraf dist && tsup --dts-resolve",
+    "build:ts": "tsc",
+    "build": "rimraf dist && tsup --dts-resolve && npm run build:ts",
     "prepublishOnly": "npm run build && npm run test"
   },
   "exports": {
-    ".": {
-      "require": "./dist/classes.js",
-      "import": "./dist/index.mjs"
+    ".": "./dist/index.js",
+    "./module": {
+      "require": "./dist/module/index.js",
+      "import": "./dist/module/index.js"
     }
   },
-  "types": "./dist/index.d.ts",
   "keywords": [
     "Bem",
     "class",
