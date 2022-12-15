@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "module": "amd",
+    "module": "ESNext",
     "lib": ["es5", "es6", "dom"],
-    "rootDir": "./src/",
-    "outFile": "./dist/bemm.ts.js",
-    // "outDir": "dist",
+    "outDir": "dist",
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-  }
+    "moduleResolution": "node"
+  },
+  "exclude": ["./tsup.config.ts","./dist","**/*.test.ts"]
 }

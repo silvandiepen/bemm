@@ -1,6 +1,6 @@
 {
   "name": "bemm",
-  "version": "0.5.1",
+  "version": "1.0.1",
   "description": "Create BEM style classes",
   "main": "dist/index.js",
   "files": [
@@ -8,16 +8,17 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "rimraf dist && tsup --dts-resolve",
+    "build:ts": "tsc",
+    "build": "rimraf dist && tsup --dts-resolve && npm run build:ts",
     "prepublishOnly": "npm run build && npm run test"
   },
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+    ".": "./dist/index.js",
+    "./module": {
+      "require": "./dist/module/index.js",
+      "import": "./dist/module/index.js"
     }
   },
-  "types": "./dist/index.d.ts",
   "keywords": [
     "Bem",
     "class",
@@ -26,6 +27,7 @@
   "author": "Sil van Diepen",
   "license": "ISC",
   "dependencies": {
+    "@sil/id": "^0.0.1",
     "@types/jest": "^27.4.0",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.3",

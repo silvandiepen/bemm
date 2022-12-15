@@ -5,8 +5,7 @@ export interface BemmObject {
 
 export interface BemmSettings {
   toKebabCase?: boolean;
-  returnArray?: boolean;
-  returnString?: boolean;
+  return?: "array" | "string" | "auto";
 }
 
 export interface MultiBemmObject {

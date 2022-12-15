@@ -1,12 +1,27 @@
+import { toKebabCase, undefinedIsTrue } from "./helpers";
+import { useClasses, type useClassesReturnType } from "./useClasses";
+/*
+ *
+ * Types
+ *
+ */
 export interface BemmObject {
-  element: string;
+  element: string | null;
   modifier: string | string[];
+  show?: boolean;
 }
+
+export const BemmReturn = {
+  ARRAY: "array",
+  STRING: "string",
+  AUTO: "auto",
+} as const;
+
+export type BemmReturn = typeof BemmReturn[keyof typeof BemmReturn];
 
 export interface BemmSettings {
   toKebabCase?: boolean;
-  returnArray?: boolean;
-  returnString?: boolean;
+  return?: BemmReturn;
 }
 
 export interface MultiBemmObject {
@@ -17,9 +32,13 @@ export interface MultiBemmBlocks {
   [key: string]: string | string[];
 }
 
-import { toKebabCase } from "./helpers";
+/*
+ *
+ * Convert
+ *
+ */
 
-const toBemmObject = (
+export const toBemmObject = (
   e: string | BemmObject | null,
   m: string | string[],
   alt: BemmObject
@@ -28,30 +47,53 @@ const toBemmObject = (
     return {
       element: e,
       modifier: m,
+      show: alt.show,
     };
   } else if (typeof e == "object" && e?.element && e?.modifier) {
     return {
       element: e.element,
       modifier: e.modifier,
+      show: e.show,
     };
   }
 
   return {
     element: alt.element,
     modifier: alt.modifier,
+    show: alt.show,
   };
 };
 
 const toBemmSettings = (settings: BemmSettings): BemmSettings => {
   return {
     toKebabCase: true,
-    returnArray: false,
-    returnString: false,
+    return: BemmReturn.AUTO,
     ...settings,
   };
 };
 
-export const makeBem = (
+/*
+ *
+ * Create a BEMM class
+ *
+ */
+
+export const returnValues = (
+  classes: string[],
+  settings: BemmSettings
+): string | string[] => {
+  switch (settings.return) {
+    case BemmReturn.STRING:
+      return classes.join(" ");
+    case BemmReturn.ARRAY:
+      return classes;
+    default:
+    case BemmReturn.AUTO:
+      return classes.length == 1 ? classes[0] : classes;
+  }
+};
+
+export const generateBemm = (
   block: string,
   e: BemmObject["element"] | BemmObject = "",
   m: BemmObject["modifier"] = "",
@@ -79,7 +121,11 @@ export const makeBem = (
 
   if (typeof modifier == "object") {
     modifier.forEach((mod: string) => {
-      classes.push(`${elementClass}--${convertCase(mod)}`);
+      classes.push(
+        convertCase(mod).length
+          ? `${elementClass}--${convertCase(mod)}`
+          : `${elementClass}`
+      );
     });
   } else {
     let className = `${elementClass}${
@@ -88,60 +134,90 @@ export const makeBem = (
 
     classes.push(className);
   }
-
-  if (settings.returnString && !settings.returnArray)
-    return typeof classes == "string" ? classes : classes.join(" ");
-  return settings.returnArray
-    ? classes
-    : classes.length == 1
-    ? classes[0]
-    : classes;
+  return returnValues(classes, settings);
 };
 
-export const createBemms = (
+/*
+ *
+ * use Multiple Bemms
+ *
+ */
+export const useBemms = (
   blocks: MultiBemmBlocks,
   baseSettings: BemmSettings = {}
 ): MultiBemmObject => {
   const bemms: MultiBemmObject = {};
 
   Object.keys(blocks).forEach((key) => {
-    bemms[key] = createBemm(blocks[key], baseSettings);
+    bemms[key] = useBemm(blocks[key], baseSettings);
   });
 
   return bemms;
 };
 
-export const createBemm =
-  (block: string | string[], baseSettings: BemmSettings = {}): Function =>
-  (
+/*
+ *
+ * useBemm
+ *
+ */
+
+type bemmReturnType = (
+  e?: BemmObject["element"] | BemmObject,
+  m?: BemmObject["modifier"],
+  s?: BemmSettings
+) => {};
+
+interface useBemmReturnType {
+  bemm: bemmReturnType;
+  classes: Function;
+}
+
+export const useBemm = (
+  block: string | string[],
+  baseSettings: BemmSettings = {}
+): useBemmReturnType & bemmReturnType => {
+  const bemm = (
     e: BemmObject["element"] | BemmObject = "",
     m: BemmObject["modifier"] = "",
-    s: BemmSettings
-  ) => {
+    s: BemmSettings = {}
+  ): string | string[] => {
     const settings = toBemmSettings({ ...baseSettings, ...s });
+
+    if (typeof e !== "string" && e !== null && !undefinedIsTrue(e.show)) {
+      return "";
+    }
 
     let classes: string[] = [];
     if (typeof block == "string") {
-      classes = makeBem(block, e, m, {
+      classes = generateBemm(block, e, m, {
         ...settings,
-        returnArray: true,
+        return: "array",
       }) as string[];
     } else {
       block.forEach((b) => {
         classes = [
           ...classes,
-          ...(makeBem(b, e, m, {
+          ...(generateBemm(b, e, m, {
             ...settings,
-            returnArray: true,
+            return: "array",
           }) as string[]),
         ];
       });
     }
-    if (settings.returnString && !settings.returnArray)
-      return typeof classes == "string" ? classes : classes.join(" ");
-    return settings.returnArray
-      ? classes
-      : classes.length == 1
-      ? classes[0]
-      : classes;
+
+    switch (settings.return) {
+      case BemmReturn.STRING:
+        return classes.join(" ");
+      case BemmReturn.ARRAY:
+        return classes;
+      default:
+      case BemmReturn.AUTO:
+        return classes.length == 1 ? classes[0] : classes;
+    }
   };
+
+  bemm.bemm = bemm;
+  bemm.classes = useClasses(block, baseSettings);
+
+  return bemm;
+};
