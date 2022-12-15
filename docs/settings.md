@@ -1,6 +1,7 @@
 ---
 projectLogo: assets/icon.svg
 projectTitle: BEMM
+projectDescription: Create BEMM classes
 ---
 
 # Settings

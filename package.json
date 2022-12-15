@@ -27,6 +27,7 @@
   "author": "Sil van Diepen",
   "license": "ISC",
   "dependencies": {
+    "@sil/id": "^0.0.1",
     "@types/jest": "^27.4.0",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.3",
