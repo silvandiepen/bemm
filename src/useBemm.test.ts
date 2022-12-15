@@ -166,3 +166,19 @@ describe("useBemm from Object", () => {
     });
   });
 });
+
+describe("Settings", () => {
+  it("Should change the outcome based on settings",()=>{
+    const bemm = useBemm("Block");
+    const bemmClass = bemm('element','modifier',{
+      return: 'array',
+      toKebabCase: false,
+      prefix: {
+        element: '_',
+        modifier: '-'
+      }
+    });
+
+    expect(bemmClass).toEqual(['Block_element-modifier']);
+  })
+})

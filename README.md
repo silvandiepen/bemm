@@ -2,7 +2,7 @@
 
 ## Block\_\_Element--Modifier Maker
 
-Create BEM names from within your component.
+Create BEM names from within your component. Without any third party dependencies.
 
 ### Installation
 

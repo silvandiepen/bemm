@@ -22,6 +22,10 @@ export type BemmReturn = typeof BemmReturn[keyof typeof BemmReturn];
 export interface BemmSettings {
   toKebabCase?: boolean;
   return?: BemmReturn;
+  prefix?: {
+    element?: string;
+    modifier?: string;
+  };
 }
 
 export interface MultiBemmObject {
@@ -65,10 +69,17 @@ export const toBemmObject = (
 };
 
 const toBemmSettings = (settings: BemmSettings): BemmSettings => {
+  let prefix = {
+    modifier: "--",
+    element: "__",
+    ...settings.prefix
+  };
+
   return {
     toKebabCase: true,
     return: BemmReturn.AUTO,
     ...settings,
+    prefix: prefix,
   };
 };
 
@@ -114,7 +125,7 @@ export const generateBemm = (
   };
 
   const elementClass = `${convertCase(block)}${
-    element ? `__${convertCase(element)}` : ``
+    element ? `${settings.prefix?.element}${convertCase(element)}` : ``
   }`;
 
   const classes: string[] = [];
@@ -123,13 +134,13 @@ export const generateBemm = (
     modifier.forEach((mod: string) => {
       classes.push(
         convertCase(mod).length
-          ? `${elementClass}--${convertCase(mod)}`
+          ? `${elementClass}${settings.prefix?.modifier}${convertCase(mod)}`
           : `${elementClass}`
       );
     });
   } else {
     let className = `${elementClass}${
-      modifier ? `--${convertCase(modifier)}` : ``
+      modifier ? `${settings.prefix?.modifier}${convertCase(modifier)}` : ``
     }`;
 
     classes.push(className);
