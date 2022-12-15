@@ -16,7 +16,7 @@
     ".": "./dist/index.js",
     "./module": {
       "require": "./dist/module/index.js",
-      "import": "./dist/module/index.js"
+      "import": "./dist/module/index.mjs"
     }
   },
   "keywords": [
