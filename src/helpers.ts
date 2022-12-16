@@ -1,10 +1,11 @@
-export const toKebabCase = (str: string): string =>
-  str !== ""
-    ? str
-        .replace(/([a-z])([A-Z])/g, "$1-$2")
-        .replace(/[\s_]+/g, "-")
-        .toLowerCase()
-    : "";
+export const toKebabCase = (str: string = ""): string => {
+  if (!str) return "";
+  const matches = str.match(
+    /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+  );
+  return matches ? matches.map((x) => x.toLowerCase()).join("-") : "";
+};
+
 
 export const isArray = (input: any) => {
   return typeof input == "object" && Array.isArray(input);

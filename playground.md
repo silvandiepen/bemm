@@ -9,13 +9,13 @@ projectStyle: /assets/custom.css
     import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'  
     import prettier from "https://unpkg.com/prettier@2.8.1/esm/standalone.mjs";
     import parserBabel from "https://unpkg.com/prettier@2.8.1/esm/parser-babel.mjs";
-    import { useBemm, generateBemm } from  'https://unpkg.com/bemm@1.0.2/dist/module/index.mjs'
+    import { useBemm, generateBemm } from  'https://unpkg.com/bemm@1.0.4/dist/module/index.mjs'
 
 
     const state = reactive({
         block: 'block',
-        element: '',
-        modifier: '',
+        element: 'element',
+        modifier: 'modifier',
         settings: {
             kebabCase: true,
             return: "auto",
@@ -41,9 +41,10 @@ projectStyle: /assets/custom.css
         }
     }
 
-    const cleanUp = (input) => {
-        return input ? input.replaceAll(' ',',').split(',').filter((v)=>v!==undefined || v !== null || v !== "") : [];
-    }
+    const cleanUp = (input, auto=false) => {
+        const str = input ? input.replaceAll(' ',',').split(',').filter((v)=>v!==undefined || v !== null || v !== "") : [];
+        return auto ? toStringIfNeeded(str) : str;
+   }
 
     const toStringIfNeeded = (input)=>{
         if(input.length == 0) return '';
@@ -56,6 +57,9 @@ projectStyle: /assets/custom.css
 
     createApp({
         state,
+        get blocks(){
+            return cleanUp(state.block);
+        },
         get elements(){
             return cleanUp(state.element);
         },
@@ -66,8 +70,9 @@ projectStyle: /assets/custom.css
 
             const elms = toValue(toElement(state.element))
             const mods = toValue(cleanUp(state.modifier));
+            const block = toValue(cleanUp(state.block));
 
-            const init = `const bemm = useBemm('${state.block}')`;
+            const init = `const bemm = useBemm(${block})`;
 
             const defaultSettings = {
                 kebabCase: true,
@@ -98,8 +103,9 @@ projectStyle: /assets/custom.css
         get result(){
 
             let value = null;
+
             
-            const bemm = useBemm(state.block, state.settings);          
+            const bemm = useBemm(cleanUp(state.block, true), state.settings);          
             const elms = toElement(state.element);
             const mods = cleanUp(state.modifier);
 
@@ -133,6 +139,7 @@ projectStyle: /assets/custom.css
                 <label>Block</label>
                 <input type="text" v-model="state.block" />
             </div>
+            <ul v-if="blocks.length > 1"><li v-for="block in blocks">{{block}}</li></ul>
             <div class="input">
                 <label>Element</label>
                 <input type="text" v-model="state.element" />
@@ -141,7 +148,7 @@ projectStyle: /assets/custom.css
                 <label>modifier</label>
                 <input type="text" v-model="state.modifier" />
             </div>
-            <ul><li v-for="mod in modifiers">{{mod}}</li></ul>
+            <ul v-if="modifiers.length > 1"><li v-for="mod in modifiers">{{mod}}</li></ul>
         </div>
         <div class="column">
             <h4>Settings</h4>
