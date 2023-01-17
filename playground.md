@@ -4,14 +4,13 @@ projectStyle: /assets/custom.css
 
 # Playground
 
+<script type="module" src="https://unpkg.com/@sil/ui"></script>
 <script type="module">
-
     import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'  
     import prettier from "https://unpkg.com/prettier@2.8.1/esm/standalone.mjs";
     import parserBabel from "https://unpkg.com/prettier@2.8.1/esm/parser-babel.mjs";
     import { useBemm, generateBemm } from  'https://unpkg.com/bemm@1.0.4/dist/module/index.mjs'
-
-
+    
     const state = reactive({
         block: 'block',
         element: 'element',
@@ -132,6 +131,7 @@ projectStyle: /assets/custom.css
     <pre><code>{{result}}</code></pre>
     <br>    <br>    <br>
     <div class="row">
+    <sil-checkbox label="test"></sil-checkbox>
         <div class="column">
             <h4>Input</h4>
             <br>
