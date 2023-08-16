@@ -4,6 +4,27 @@ projectStyle: /assets/custom.css
 
 # Playground
 
+<style>
+
+pre{
+    border: 1px solid currentColor;
+    padding: 1em; 
+    border-radius: 0.5em;
+}
+.input{
+    display: flex; align-items: center; justify-content: space-between;
+}
+.input input,
+.input select{
+    width: 50%;
+    padding: 1em;
+    border: 1px solid currentColor;
+    border-radius: 0.5em;
+    margin: 0;
+}
+
+</style>
+
 <script type="module">
 
     import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'  
@@ -14,8 +35,8 @@ projectStyle: /assets/custom.css
 
     const state = reactive({
         block: 'block',
-        element: '',
-        modifier: '',
+        element: 'element',
+        modifier: 'modifier',
         settings: {
             kebabCase: true,
             return: "auto",
@@ -33,7 +54,7 @@ projectStyle: /assets/custom.css
            } else {
                 if(input.length == 1){
                     return `"${input[0]}"`;
-                }    
+                }
                 return `[${input.map((m)=>`"${m}"`).join(',')}]`;
             }
         } else {
@@ -45,12 +66,12 @@ projectStyle: /assets/custom.css
         return input ? input.replaceAll(' ',',').split(',').filter((v)=>v!==undefined || v !== null || v !== "") : [];
     }
 
-    const toStringIfNeeded = (input)=>{
+    const toStringIfNeeded = (input) => {
         if(input.length == 0) return '';
         if(input.length == 1){ return input[0] } else return input;
     }
 
-    const toElement = (input)=>{
+    const toElement = (input) => {
         return input.replaceAll(' ','');
     }
 
@@ -67,28 +88,57 @@ projectStyle: /assets/custom.css
             const elms = toValue(toElement(state.element))
             const mods = toValue(cleanUp(state.modifier));
 
-            const init = `const bemm = useBemm('${state.block}')`;
+            let init = `const bemm = useBemm('${state.block}')`;
 
             const defaultSettings = {
                 kebabCase: true,
-                return: "auto"
+                return: "auto",
+                prefix: {
+                    element: "__",
+                    modifier: "--"
+                }
+            }
+
+            if(JSON.stringify(defaultSettings) !== JSON.stringify(state.settings)){
+                let customSettings = [];
+                let customPrefix = [];
+                
+                if(defaultSettings.kebabCase !== state.settings.kebabCase){
+                    customSettings.push(`kebabCase: ${state.settings.kebabCase}`);
+                }
+                if(defaultSettings.return !== state.settings.return){
+                    customSettings.push(`return: "${state.settings.return}"`);
+                }
+                if(defaultSettings.prefix.element !== state.settings.prefix.element){
+                    customPrefix.push(`element: "${state.settings.prefix.element}"`);
+                }
+                if(defaultSettings.prefix.modifier !== state.settings.prefix.modifier){                        
+                    customPrefix.push(`element: "${state.settings.prefix.modifier}"`);
+                }
+               
+               init = `const bemm = useBemm('${state.block}',{
+                    ${customSettings.length ? customSettings.join(',') : ``}
+                    ${customSettings.length && customPrefix.length ? `,` : ``}
+                    ${customPrefix.length ? `prefix: { ${customPrefix.join(',')} }` : ``}
+                })`
             }
 
             let code = ``;
 
             if(state.element && state.modifier){
-                code = `${init} 
+                code = `${init}
                 bemm(${elms}, ${mods});`
             } else if(state.element){
-                code =  `${init} 
+                code =  `${init}
                 bemm(${elms});`
             } else if(state.modifier){
-                code =  `${init} 
+                code =  `${init}
                 bemm('', ${mods});`
             } else {
-               code =  `${init} 
+               code =  `${init}
                bemm();`
             }
+// return code;
 
             return prettier.format(code,{
                 parser: "babel",
@@ -141,7 +191,9 @@ projectStyle: /assets/custom.css
                 <label>modifier</label>
                 <input type="text" v-model="state.modifier" />
             </div>
+            <template v-if="modifiers.length > 1">
             <ul><li v-for="mod in modifiers">{{mod}}</li></ul>
+            </template>
         </div>
         <div class="column">
             <h4>Settings</h4>
