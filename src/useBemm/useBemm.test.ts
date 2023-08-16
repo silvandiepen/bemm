@@ -1,0 +1,203 @@
+import { useBemm, useBemms, generateBemm } from "./useBemm";
+
+describe("useBemm", () => {
+  describe("with single block", () => {
+    it("returns default class name", () => {
+      const bemm = useBemm("block");
+      expect(bemm()).toEqual("block");
+    });
+
+    it("returns class name with element", () => {
+      const bemm = useBemm("block");
+      expect(bemm("element")).toEqual("block__element");
+    });
+
+    it("returns class name with modifier", () => {
+      const bemm = useBemm("block");
+      expect(bemm("", "dark")).toEqual("block--dark");
+    });
+
+    it("returns class name with element and modifier", () => {
+      const bemm = useBemm("block");
+      expect(bemm("element", "dark")).toEqual("block__element--dark");
+    });
+
+    it("returns class name with multiple modifiers", () => {
+      const bemm = useBemm("block");
+      expect(bemm("element", ["blue", "black"])).toEqual([
+        "block__element--blue",
+        "block__element--black",
+      ]);
+    });
+  });
+
+  describe("with multiple blocks", () => {
+    it("returns default class names", () => {
+      const bemm = useBemm(["block1", "block2"]);
+      expect(bemm()).toEqual(["block1", "block2"]);
+    });
+
+    it("returns class names with element", () => {
+      const bemm = useBemm(["block1", "block2"]);
+      expect(bemm("element")).toEqual(["block1__element", "block2__element"]);
+    });
+
+    it("returns class names with modifier", () => {
+      const bemm = useBemm(["block1", "block2"]);
+      expect(bemm("", "dark")).toEqual(["block1--dark", "block2--dark"]);
+    });
+
+    it("returns class names with element and modifier", () => {
+      const bemm = useBemm(["block1", "block2"]);
+      expect(bemm("element", "dark")).toEqual([
+        "block1__element--dark",
+        "block2__element--dark",
+      ]);
+    });
+
+    it("returns class names with multiple modifiers", () => {
+      const bemm = useBemm(["block1", "block2"]);
+      expect(bemm("element", ["blue", "black"])).toEqual([
+        "block1__element--blue",
+        "block1__element--black",
+        "block2__element--blue",
+        "block2__element--black",
+      ]);
+    });
+  });
+
+  describe("with settings", () => {
+    it("returns class names with custom prefix and no kebab case", () => {
+      const bemm = useBemm("Block", {
+        return: "array",
+        toKebabCase: false,
+        prefix: {
+          element: "_",
+          modifier: "-",
+        },
+      });
+      expect(bemm("element", "modifier")).toEqual(["Block_element-modifier"]);
+    });
+  });
+});
+
+describe("generateBemm", () => {
+  it("returns class name as string with multiple modifiers", () => {
+    expect(
+      generateBemm("block", "element", ["blue", "black"], { return: "string" })
+    ).toBe("block__element--blue block__element--black");
+  });
+
+  it("returns class names as array with multiple modifiers", () => {
+    expect(
+      generateBemm("block", "element", ["blue", "black"], { return: "array" })
+    ).toEqual(["block__element--blue", "block__element--black"]);
+  });
+});
+
+describe("useBemms", () => {
+  it("returns multiple Bemm functions", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm).toMatchObject({
+      block: expect.any(Function),
+      test: expect.any(Function),
+    });
+  });
+
+  it("returns value created by a Bemm function", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm.test("")).toBe("testing");
+  });
+
+  it("returns class name created by Bemm function with element", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm.test("element")).toBe("testing__element");
+  });
+
+  it("returns class name created by Bemm function with modifier", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm.test("", "dark")).toBe("testing--dark");
+  });
+
+  it("returns class name created by Bemm function with element and modifier", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm.test("element", "dark")).toBe("testing__element--dark");
+  });
+
+  it("returns class names created by Bemm function with multiple modifiers", () => {
+    const bemm = useBemms({ block: "block", test: "testing" });
+
+    expect(bemm.test("element", ["blue", "black"])).toEqual([
+      "testing__element--blue",
+      "testing__element--black",
+    ]);
+  });
+});
+
+describe("useBemm from Object", () => {
+  it("returns valid BEM class name with element and modifier", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({ element: "element", modifier: "modifier" });
+
+    expect(bemmClass).toBe("block__element--modifier");
+  });
+
+  it("returns valid BEM class name with element and no modifier", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({ element: "element", modifier: "" });
+
+    expect(bemmClass).toBe("block__element");
+  });
+
+  it("returns valid BEM class name with modifier and no element", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({ element: "", modifier: "modifier" });
+
+    expect(bemmClass).toBe("block--modifier");
+  });
+
+  it("returns valid BEM class name with no element and no modifier", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({ element: "", modifier: "" });
+
+    expect(bemmClass).toBe("block");
+  });
+
+  it("returns valid BEM class name with element, modifier, and true conditional", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({
+      element: "element",
+      modifier: "modifier",
+      show: true,
+    });
+
+    expect(bemmClass).toBe("block__element--modifier");
+  });
+
+  it("returns empty string with element, modifier, and false conditional", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm({
+      element: "element",
+      modifier: "modifier",
+      show: false,
+    });
+
+    expect(bemmClass).toBe("");
+  });
+
+  describe("combined functions from useBemm", () => {
+    it("returns valid BEM class names", () => {
+      const { bemm, classes } = useBemm("block");
+      const bemmClass = bemm({ element: "element", modifier: "modifier" });
+      const bemmClasses = classes({ e: "test", m: "something" }, "test");
+
+      expect(bemmClass).toBe("block__element--modifier");
+      expect(bemmClasses).toEqual(["block__test--something", "block__test"]);
+    });
+  });
+});

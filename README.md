@@ -2,7 +2,15 @@
 
 ## Block\_\_Element--Modifier Maker
 
-Create BEM names from within your component. Without any third party dependencies.
+"Bemm: the lightweight JavaScript/TypeScript library for generating BEM class names in your components, without any third-party dependencies."
+
+Bemm is a lightweight JavaScript/TypeScript library that provides a simple and flexible way to generate BEM (Block Element Modifier) class names from within your components. It is designed to be used without any third-party dependencies and can be easily integrated into any JavaScript or TypeScript project that uses npm as a package manager.
+
+With Bemm, you can create BEM class names for your components using a simple and intuitive API. The library provides a set of composable functions that allow you to generate class names for blocks, elements, and modifiers, as well as more advanced features like multiple modifiers and multiple blocks.
+
+Bemm is ideal for web developers who want to use a structured approach to styling and class naming in their projects, without the need for complex CSS frameworks or preprocessors. Whether you are building a small website or a large web application, Bemm can help you keep your code organized and maintainable, while reducing the risk of naming conflicts and other common styling issues.
+
+In this documentation, you will learn how to use Bemm to generate BEM class names for your components, as well as some advanced features and best practices. We hope you find Bemm useful and welcome any feedback or contributions to the project.
 
 ### Installation
 

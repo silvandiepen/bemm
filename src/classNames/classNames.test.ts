@@ -1,13 +1,11 @@
 import {
   classNames as c,
-  isMixedInput,
 } from "./classNames";
-
-import { useBemm } from "./useBemm";
+import { isMixedInput, isValidObject } from "./classNames.utils";
+import { useBemm } from "../useBemm";
+import { isArray } from "../helpers";
 
 const bemm = useBemm("block");
-
-
 
 describe("isMixedInput", () => {
   it("Wrong values - a string", () => {
@@ -24,6 +22,32 @@ describe("isMixedInput", () => {
   });
   it("Right values - a array with mixed accepted values", () => {
     expect(isMixedInput(["test1", { test2: true }])).toEqual(true);
+  });
+});
+
+describe('isValidObject', () => {
+  it('should return false if input is an array', () => {
+    const input = [1, 2, 3];
+    expect(isArray(input)).toBe(true);
+    expect(isValidObject(input)).toBe(false);
+  });
+
+  it('should return true for a valid object', () => {
+    const input = { name: 'John', age: 30 };
+    expect(isArray(input)).toBe(false);
+    expect(isValidObject(input)).toBe(true);
+  });
+
+  it('should return false for an object with mismatched keys and values', () => {
+    const input = { name: 'John', age: 30, address: '123 Main St' };
+    expect(isArray(input)).toBe(false);
+    expect(isValidObject(input)).toBe(true);
+  });
+
+  it('should return false for an object with non-string keys', () => {
+    const input = { name: 'John', age: 30, key: 'one' };
+    expect(isArray(input)).toBe(false);
+    expect(isValidObject(input)).toBe(true);
   });
 });
 

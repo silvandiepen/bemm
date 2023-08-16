@@ -161,6 +161,7 @@ describe("useClasses", () => {
     const output = [
       "block__element",
       "block__test",
+      "block",
       "block__lorem",
       "block__dolor",
     ];

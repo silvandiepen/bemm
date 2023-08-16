@@ -1,49 +1,12 @@
-import {
-  isArray,
-  isStringArray,
-  cleanArray,
-  arrayHasNumber,
-  isNumber,
-  isString,
-} from "./helpers";
+import { isArray, isStringArray, cleanArray } from "../helpers";
+import { keyObject, classesInput } from "./classNames.model";
+import { isValidObject, isMixedInput } from "./classNames.utils";
 
-type keyObject = { [key: string]: any };
-type classesInput = string | string[] | keyObject;
-
-export const isValidObject = (input: any) => {
-  if (isArray(input)) return false;
-
-  const keys = Object.values(input);
-  const values = Object.keys(input);
-
-  // Check if the keys is the same amount as the values
-  if (keys.length !== values.length) {
-    return false;
-  }
-  // Check if all keys are strings;
-  keys.forEach((key) => {
-    if (typeof key !== "string") return false;
-  });
-
-  return true;
-};
-
-export const isMixedInput = (input: any): boolean => {
-  if (!Array.isArray(input)) return false;
-  if (isStringArray(input)) return false;
-  if (arrayHasNumber(input)) return false;
-  let ret = true;
-  input.forEach((v) => {
-    if (
-      typeof v == "number" ||
-      !(isString(v) || isStringArray(v) || isValidObject(v) || isNumber(v))
-    ) {
-      ret = false;
-    }
-  });
-  return ret;
-};
-
+/**
+ * Returns an array of class names from an object with boolean values.
+ * @param input An object with boolean values.
+ * @returns An array of class names.
+ */
 const getObjectClasses = (input: any): string[] => {
   let classArray: string[] = [];
   const keys = Object.keys(input);
@@ -55,6 +18,11 @@ const getObjectClasses = (input: any): string[] => {
   return classArray;
 };
 
+/**
+ * Generates an array of class names from a mixed input.
+ * @param input A string, string array, object with boolean values, or array of mixed inputs.
+ * @returns An array of class names.
+ */
 const generateClasses = (input: classesInput): string[] => {
   let classArray: string[] = [];
 
@@ -70,6 +38,11 @@ const generateClasses = (input: classesInput): string[] => {
   return classArray;
 };
 
+/**
+ * Generates a string of space-separated class names from a mixed input.
+ * @param input A string, string array, object with boolean values, or array of mixed inputs.
+ * @returns A string of space-separated class names.
+ */
 export const classNames = (input: classesInput): string => {
   let classArray: string[] = [];
 

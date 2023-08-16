@@ -1,117 +1,29 @@
-import { generateBemm, returnValues } from "./useBemm";
-import { isArray, isStringArray, isString, cleanArray } from "./helpers";
-// import type { BemmObjectAllowed, BemmSettings } from "./useBemm";
+import { generateBemm, returnValues } from "../useBemm";
+import {
+  cleanArray,
+} from "../helpers";
+import {
+  BemmSettings,
+  BemmReturn,
+  InputType,
+  BemmObjectAllowed,
+  useClassesReturnType,
+  useClassesInputType,
+} from "./useClasses.model";
+import {
+  toElement,
+  toModifier,
+  isAcceptedArray,
+  isFalseArray,
+  isBemmObject,
+} from "./useClasses.utils";
 
-/*
- *
- * Types
- *
- */
-
-export const BemmReturn = {
-  ARRAY: "array",
-  STRING: "string",
-  AUTO: "auto",
-} as const;
-
-export type BemmReturn = typeof BemmReturn[keyof typeof BemmReturn];
-
-export interface BemmSettings {
-  toKebabCase?: boolean;
-  return?: BemmReturn;
-}
-export interface BemmObject {
-  element: string;
-  modifier: string | string[];
-  show?: boolean;
-}
-export interface BemmObjectAllowed extends BemmObject {
-  block: string;
-  b: string;
-  e: string;
-  m: string | string[];
-  s: boolean;
-}
-
-const InputType = {
-  STRING: "string",
-  ARRAY: "array",
-  OBJECT: "object",
-  NONE: "none",
-};
-type InputType = typeof InputType[keyof typeof InputType];
-
-/*
- *
- * Convert
- *
- */
-const toElement = (input: any): string => {
-  if (isString(input)) {
-    return input;
-  }
-  return "";
-};
-const toModifier = (input: any): string | string[] => {
-  if (isString(input)) {
-    return input;
-  } else if (isStringArray(input)) {
-    return input;
-  }
-  return "";
-};
-
-/*
- *
- * Checking / Is
- *
- */
-
-const isBemmObject = (input: any): boolean => {
-  if (typeof input !== "object" && !Array.isArray(input) && input !== null)
-    return false;
-
-  const allowedKeys = [
-    "b",
-    "block",
-    "e",
-    "element",
-    "m",
-    "modifier",
-    "s",
-    "show",
-  ];
-
-  let isAllowed = ![
-    ...new Set(Object.keys(input).find((v) => !allowedKeys.includes(v))),
-  ].length;
-
-  return isAllowed;
-};
-
-const isAcceptedArray = (input: any): boolean => {
-  if (isArray(input)) {
-    if (isString(input[0]) && (isStringArray(input[1]) || isString(input[1]))) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const isFalseArray = (input: any) => {
-  if (!isString(input) && input[2] !== undefined) {
-    if (!input[2]) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-/*
- *
- * Create Classes
- *
+/**
+ * Returns an array of class names generated from an array input.
+ * @param block The block name.
+ * @param input An array input.
+ * @param settings Optional settings for the BEMM generator.
+ * @returns An array of class names.
  */
 const classesFromArray = (
   block: string,
@@ -131,6 +43,13 @@ const classesFromArray = (
   return classes;
 };
 
+/**
+ * Returns an array of class names generated from a string input.
+ * @param block The block name.
+ * @param input A string input.
+ * @param settings Optional settings for the BEMM generator.
+ * @returns An array of class names.
+ */
 const classesFromString = (
   block: string,
   input: string,
@@ -154,6 +73,13 @@ const classesFromString = (
   }) as string[];
 };
 
+/**
+ * Returns an array of class names generated from an object input.
+ * @param block The block name.
+ * @param input An object input.
+ * @param settings Optional settings for the BEMM generator.
+ * @returns An array of class names.
+ */
 const classesFromObject = (
   block: string,
   input: Partial<BemmObjectAllowed>,
@@ -178,45 +104,39 @@ const classesFromObject = (
   }) as string[];
 };
 
-/*
- *
- * Get the Type
- *
+/**
+ * Returns the input type of a given input.
+ * @param input The input to check.
+ * @returns The input type.
  */
-
 const getInputType = (input: any): InputType => {
-  if (input == null) return InputType.NONE;
+  if (input === null || input === undefined) return InputType.NONE;
 
-  if (isString(input) && input !== "") {
+  if (typeof input === "string") {
     return InputType.STRING;
   }
+
   if (
-    (isStringArray(input) && (input as string[]).length < 4) ||
+    (Array.isArray(input) && input.length < 4) ||
     isAcceptedArray(input)
   ) {
     if (isFalseArray(input)) return InputType.NONE;
     return InputType.ARRAY;
   }
+
   if (isBemmObject(input)) {
     return InputType.OBJECT;
   }
+
   return InputType.NONE;
 };
 
-/*
- *
- * The Function
- *
+/**
+ * Returns a function that generates class names based on the given block and settings.
+ * @param block The block name or an array of block names.
+ * @param settings Optional settings for the BEMM generator.
+ * @returns A function that generates class names.
  */
-
-export type useClassesReturnType = Function;
-type useClassesInputType = (
-  | null
-  | string
-  | [string, (string[] | string)?, boolean?]
-  | { element: string; modifier?: string }
-)[];
-
 export const useClasses = (
   block: string | string[],
   settings: BemmSettings = {}

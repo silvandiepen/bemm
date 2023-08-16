@@ -1,8 +1,12 @@
 # useClasses
 
-In order to create a multitude of classes using one function. You can use the useClasses composable.
+The `useClasses` function is a composable that generates class names based on the BEM (Block Element Modifier) methodology. It takes a block name and optional settings as arguments and returns a function that can be used to generate class names based on various input types, including strings, arrays, and objects.
+
+## Usage
 
 ```js
+import { useClasses } from "./useClasses";
+
 const bemmClasses = useClasses("block");
 
 const classes = bemmClasses(
@@ -103,10 +107,7 @@ bemClasses(
 //  block__lorem block__ipsum block__dolor
 ```
 
-
-
 **Inline Conditional**
-
 
 ```js
 const bemmClasses = useClasses("block");
