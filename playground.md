@@ -72,7 +72,7 @@ small{
 
     setTimeout(()=>{
         app.mount()
-    },5000);
+    },1000);
 
     import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'  
     import prettier from "https://unpkg.com/prettier@2.8.1/esm/standalone.mjs";
