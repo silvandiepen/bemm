@@ -126,18 +126,86 @@ string for the block.
 
 The create bemm function, or whatever you want to call it, has two arguments:
 
-| Argument   | Default | Type                   |
-| ---------- | ------- | ---------------------- |
-| `element`  | `""`    | `string \| bemmObject` |
-| `modifier` | `""`    | `string \| string[]`   |
-| `show`     | true    | `boolean`              |
+| Argument   | Default | Type                                                        |
+| ---------- | ------- | ----------------------------------------------------------- |
+| `element`  | `""`    | `string \| bemmObject`                                      |
+| `modifier` | `""`    | `string \| string[] \ { [key:string] : boolean \| number }` |
+| `show`     | true    | `boolean`                                                   |
 
 ```js
 interface bemmObject {
   element: string;
-  modifier: string | string[];
+  modifier: string | string[] | {[key:string]: boolean | number };
   show?: boolean;
 }
 ```
+
+
+## Usage
+
+
+#### Basic usage
+
+```js
+import { useBemm } from "bemm";
+
+const bemm = useBemm('app');
+
+bemm() // --> .app
+
+bemm('container') // --> .app__container
+
+bemm('container','red') // --> .app__container--red
+
+```
+
+
+### Advanced Usage
+
+
+You can use the Bemm function more advanced with different values to either create sets or make values show or not based on other variables.
+
+```js
+
+import { useBemm } from "bemm";
+
+const bemm = useBemm('app');
+
+const isRed = false;
+const hasBorder = true;
+const isLarge = true;
+const isDarkmode = false;
+
+// With boolean values
+
+bemm('container',{
+  red: isRed,
+  bordered: hasBorder,
+  large: isLarge,
+  darkmode: isDarkmode
+}) // --> ['.app__container--bordered', '.app__container--large']
+
+// With boolean values, but either/or 
+
+bemm('container',{
+  'red|blue': isRed,
+  'bordered|simple': hasBorder,
+  'large|small': isLarge,
+  'darkmode|lightmode': isDarkmode
+}) // --> ['.app__container--blue', '.app__container--bordered', '.app__container--large','.app__container--lightmode']
+
+// Or you can give a series of values and base the value on a number
+
+
+bemm('container',{
+  'red|blue|yellow': 2,
+  'active|inactive': 0,
+  'small|medium|large': 1,
+  'something|else': 5
+}) // --> ['.app__container--yellow','.app__container--active','.app__container__medium', '.app__container']
+// Notice how the last value returns the basic element, this is because the 5th element in the array is not found and therefore null is returns, this results in returning a value without modifier. 
+
+```
+
 
 [gist=2d9aff65094156a9f52f67594e8000d0]

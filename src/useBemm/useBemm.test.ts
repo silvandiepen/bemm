@@ -201,3 +201,72 @@ describe("useBemm from Object", () => {
     });
   });
 });
+
+describe("useBemm with Modifier Object", () => {
+  it("returns valid BEM class name with element and modifier", () => {
+    const bemm = useBemm("block");
+
+    expect(bemm("element", "modifier")).toBe("block__element--modifier");
+  });
+
+  it("returns valid BEM class name with element and modifier where modifier is an object - true", () => {
+    const bemm = useBemm("block");
+    expect(
+      bemm("element", {
+        modifier: true,
+      })
+    ).toBe("block__element--modifier");
+  });
+  it("returns valid BEM class name with element and modifier where modifier is an object - false", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm("element", {
+      modifier: false,
+    });
+    
+
+    expect(bemmClass).toBe("block__element");
+  });
+  
+  it("returns valid BEM class name with element and modifier where modifier is an object - with multiple", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm("element", {
+      modifier: false,
+      test: true,
+      another: true,
+    });
+
+    expect(bemmClass).toEqual(["block__element", "block__element--test", "block__element--another"]);
+  });
+
+  it("returns valid BEM class name with element and modifier where modifier is an object - change casing", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm("element", {
+      active: false,
+      inActive: true,
+    });
+
+    expect(bemmClass).toEqual(["block__element", "block__element--in-active"]);
+  });
+
+
+  it("returns valid BEM class name with element and modifier where modifier is an object - Or", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm("element", {
+      'apple|banana': false,
+      'kiwi|strawberry': true,
+    });
+
+    expect(bemmClass).toEqual(["block__element--banana", "block__element--kiwi"]);
+  });
+
+  it("returns valid BEM class name with element and modifier where modifier is an object - Or", () => {
+    const bemm = useBemm("block");
+    const bemmClass = bemm("element", {
+      'apple|banana': 0,
+      'kiwi|strawberry': 1,
+      'kiwi|strawberry|pinia': 2,
+    });
+
+    expect(bemmClass).toEqual(["block__element--apple", "block__element--strawberry", "block__element--pinia"]);
+  });
+});

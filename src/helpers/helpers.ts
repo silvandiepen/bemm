@@ -16,12 +16,31 @@ export const toKebabCase = (str: string): string => {
 };
 
 /**
+ * Checks if the input is an a number.
+ * @param input The input to check.
+ * @returns True if the input is an object, false otherwise.
+ */
+
+export const isNumeric = (input: any): boolean => {
+  return !isNaN(input) && typeof input === "number";
+};
+
+/**
+ * Checks if the input is an object.
+ * @param input The input to check.
+ * @returns True if the input is an object, false otherwise.
+ */
+export const isObject = (input: any): boolean => {
+  return typeof input == "object" && !Array.isArray(input);
+};
+
+/**
  * Checks if the input is an array.
  * @param input The input to check.
  * @returns True if the input is an array, false otherwise.
  */
 export const isArray = (input: any) => {
-  return typeof input == "object" && Array.isArray(input);
+  return typeof input == "object" && Array.isArray(input) && !isObject(input);
 };
 
 /**

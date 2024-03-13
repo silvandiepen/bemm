@@ -1,6 +1,14 @@
-import { isUndefined, toKebabCase } from "../helpers";
+import {
+  isArray,
+  isNumeric,
+  isObject,
+  isString,
+  isUndefined,
+  toKebabCase,
+} from "../helpers";
 import { useClasses } from "../useClasses";
 import {
+  BemmModifiers,
   BemmObject,
   BemmReturn,
   BemmSettings,
@@ -23,9 +31,10 @@ import {
  * @param alt - The alternative BEM object to use when the input parameters do not match the expected types.
  * @returns The BEM object with element name, modifier name, and show flag.
  */
+
 export const toBemmObject = (
   e: string | BemmObject | null,
-  m: string | string[],
+  m: string | string[] | BemmModifiers,
   alt: BemmObject
 ): BemmObject => {
   if (typeof e == "string" && m == "string") {
@@ -105,6 +114,35 @@ export const returnValues = (
  * @param s - Optional BEM settings.
  * @returns The generated BEM classes as a string or array of strings.
  */
+
+const convertCase = (str: string, settings: BemmSettings): string => {
+  if (settings.toKebabCase) str = toKebabCase(str);
+  return str;
+};
+
+const constructElementClass = (
+  block: string,
+  element: string | null,
+  settings: BemmSettings
+): string => {
+  if (element == null || element == "") return convertCase(block, settings);
+  return `${convertCase(block, settings)}${
+    settings.prefix?.element
+  }${convertCase(element, settings)}`;
+};
+
+const constructModifierClass = (
+  elementClass: string,
+  modifier: string | null,
+  settings: BemmSettings
+): string => {
+  if (modifier == null || modifier == "") return elementClass;
+  return `${elementClass}${settings.prefix?.modifier}${convertCase(
+    modifier,
+    settings
+  )}`;
+};
+
 export const generateBemm = (
   block: string,
   e: BemmObject["element"] | BemmObject = "",
@@ -120,32 +158,54 @@ export const generateBemm = (
 
   const settings = toBemmSettings(s);
 
-  const convertCase = (str: string): string => {
-    if (settings.toKebabCase) str = toKebabCase(str);
-    return str;
-  };
-
-  const elementClass = `${convertCase(block)}${
-    element ? `${settings.prefix?.element}${convertCase(element)}` : ``
-  }`;
+  const elementClass = constructElementClass(block, element, settings);
 
   const classes: string[] = [];
 
-  if (typeof modifier == "object") {
-    modifier.forEach((mod: string) => {
-      classes.push(
-        convertCase(mod).length
-          ? `${elementClass}${settings.prefix?.modifier}${convertCase(mod)}`
-          : `${elementClass}`
-      );
+  if (isObject(modifier as BemmModifiers)) {
+    Object.keys(modifier).forEach((mod: string) => {
+      const shouldShow = !!(modifier as BemmModifiers)[mod];
+      if (mod.includes("|")) {
+        if (isNumeric((modifier as BemmModifiers)[mod])) {
+          const showIndex = (modifier as BemmModifiers)[mod] as number;
+          const modArray = mod.split("|");
+          const modValue = modArray[showIndex] || "";
+          classes.push(
+            constructModifierClass(elementClass, modValue, settings)
+          );
+        } else {
+          const trueValue = mod.split("|")[0];
+          const falseValue = mod.split("|")[1];
+          classes.push(
+            constructModifierClass(
+              elementClass,
+              shouldShow ? trueValue : falseValue,
+              settings
+            )
+          );
+        }
+      } else {
+        classes.push(
+          constructModifierClass(
+            elementClass,
+            shouldShow ? mod : null,
+            settings
+          )
+        );
+      }
     });
-  } else {
-    let className = `${elementClass}${
-      modifier ? `${settings.prefix?.modifier}${convertCase(modifier)}` : ``
-    }`;
-
-    classes.push(className);
+  } else if (isArray(modifier)) {
+    (modifier as string[]).forEach((mod: string) => {
+      classes.push(constructModifierClass(elementClass, mod, settings));
+    });
+  } else if (isString(modifier)) {
+    classes.push(
+      constructModifierClass(elementClass, modifier as string, settings)
+    );
   }
+
+  console.log(`classes`, classes);
+
   return returnValues(classes, settings);
 };
 
@@ -189,7 +249,7 @@ export const useBemms = (
 export const useBemm = (
   block: string | string[],
   baseSettings: BemmSettings = {}
-): useBemmReturnType &  bemmReturnType => {
+): useBemmReturnType & bemmReturnType => {
   const bemm = (
     e: BemmObject["element"] | BemmObject = "",
     m: BemmObject["modifier"] = "",
@@ -208,11 +268,12 @@ export const useBemm = (
         return: "array",
       }) as string[];
     } else {
-      classes = block.flatMap((b) =>
-        generateBemm(b, e, m, {
-          ...settings,
-          return: "array",
-        }) as string[]
+      classes = block.flatMap(
+        (b) =>
+          generateBemm(b, e, m, {
+            ...settings,
+            return: "array",
+          }) as string[]
       );
     }
 

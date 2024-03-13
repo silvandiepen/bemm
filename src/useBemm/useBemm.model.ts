@@ -3,9 +3,13 @@
  * Types
  *
  */
+
+export interface BemmModifiers {
+  [key: string]: boolean | number;
+}
 export interface BemmObject {
   element: string | null;
-  modifier: string | string[];
+  modifier: string | string[] | BemmModifiers;
   show?: boolean;
 }
 
