@@ -1,6 +1,6 @@
 {
   "name": "bemm",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create BEM style classes",
   "main": "dist/index.js",
   "files": [
