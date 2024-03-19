@@ -204,8 +204,6 @@ export const generateBemm = (
     );
   }
 
-  console.log(`classes`, classes);
-
   return returnValues(classes, settings);
 };
 

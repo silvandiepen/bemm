@@ -201,7 +201,7 @@ small{
             const elms = toElement(state.element);
             const mods = cleanUp(state.modifier);
 
-            console.log('updatinggggg', state.settings, bemm())
+
 
             if (elms.length && mods.length) {
                 return bemm(toStringIfNeeded(elms), mods);
