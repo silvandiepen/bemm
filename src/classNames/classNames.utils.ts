@@ -44,7 +44,7 @@ export const isMixedInput = (input: any): boolean => {
   let ret = true;
   input.forEach((v) => {
     if (
-      typeof v == "number" ||
+      isNumber(v) ||
       !(isString(v) || isStringArray(v) || isValidObject(v) || isNumber(v))
     ) {
       ret = false;

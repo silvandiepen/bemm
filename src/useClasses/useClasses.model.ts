@@ -17,16 +17,16 @@ export interface BemmSettings {
   return?: BemmReturn;
 }
 export interface BemmObject {
-  element: string;
+  element: string | string[];
   modifier: string | string[];
   show?: boolean;
 }
 export interface BemmObjectAllowed extends BemmObject {
   block: string;
   b: string;
-  e: string;
-  m: string | string[];
-  s: boolean;
+  e: BemmObject['element'];
+  m: BemmObject['modifier'];
+  s: BemmObject['show']
 }
 
 export const InputType = {
@@ -34,6 +34,7 @@ export const InputType = {
   ARRAY: "array",
   OBJECT: "object",
   NONE: "none",
+  FALSE: "false",
 };
 export type InputType = (typeof InputType)[keyof typeof InputType];
 export type useClassesReturnType = Function;

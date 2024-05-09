@@ -97,7 +97,7 @@ small{
 
     const toValue = (input) => {          
         if(input){
-            if(typeof input == "string"){
+            if(isString(input)){
                 return `"${input}"`;
            } else {
                 if(input.length == 1){

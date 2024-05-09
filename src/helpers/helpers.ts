@@ -21,8 +21,8 @@ export const toKebabCase = (str: string): string => {
  * @returns True if the input is an object, false otherwise.
  */
 
-export const isNumeric = (input: any): boolean => {
-  return !isNaN(input) && typeof input === "number";
+export const isNumeric = (input: unknown): input is number => {
+  return !isNaN(input as number) && typeof input === "number";
 };
 
 /**
@@ -30,7 +30,7 @@ export const isNumeric = (input: any): boolean => {
  * @param input The input to check.
  * @returns True if the input is an object, false otherwise.
  */
-export const isObject = (input: any): boolean => {
+export const isObject = (input: unknown): input is object => {
   return typeof input == "object" && !Array.isArray(input);
 };
 
@@ -39,7 +39,7 @@ export const isObject = (input: any): boolean => {
  * @param input The input to check.
  * @returns True if the input is an array, false otherwise.
  */
-export const isArray = (input: any) => {
+export const isArray = (input: unknown): input is any[] => {
   return typeof input == "object" && Array.isArray(input) && !isObject(input);
 };
 
@@ -48,7 +48,7 @@ export const isArray = (input: any) => {
  * @param input The input to check.
  * @returns True if the input is an array of strings, false otherwise.
  */
-export const isStringArray = (input: any): boolean => {
+export const isStringArray = (input: unknown): input is string[] => {
   if (!Array.isArray(input)) {
     return false;
   }
@@ -71,9 +71,66 @@ export const isStringArray = (input: any): boolean => {
  * @param input The input to check.
  * @returns True if the input is a string, false otherwise.
  */
-export const isString = (input: any): boolean => {
+export const isString = (input: unknown): input is string => {
   return typeof input == "string";
 };
+
+/**
+ * 
+ * @param input The input to check.
+ * @returns boolean
+ * @example
+ * isNullOrUndefined(null) => true
+ * isNullOrUndefined(undefined) => true
+ * isNullOrUndefined(1) => false
+ * isNullOrUndefined("test") => false
+ */
+export const isNullOrUndefined = (input: any): input is null | undefined => {
+  return input === null || input === undefined;
+}
+
+
+/**
+ * Converts the input to an array.
+ * @param input The input to convert.
+ * @returns The input as an array.
+ * @example
+ * toArray("test") => ["test"]  
+ * toArray(["test"]) => ["test"]
+ * toArray(null) => [null]
+ * toArray(undefined) => [undefined]
+ * toArray(1) => [1]
+  */
+
+export const toArray = (input: any): any[] => {
+  if (Array.isArray(input)) {
+    return input;
+  }
+
+  return [input];
+}
+
+/**
+ * Converts the input to an array of strings.
+ * @param input 
+ * @returns The input as an array of strings.
+ * @example
+ * toStringArray("test") => ["test"]
+ * toStringArray(["test"]) => ["test"]
+ * toStringArray(null) => []
+ */
+
+export const toStringArray = (input: unknown): string[] => {
+  if (isStringArray(input)) {
+    return input;
+  }
+
+  if (isString(input)) {
+    return [input];
+  }
+
+  return [];
+}
 
 /**
  * Cleans up an array of strings by removing leading/trailing whitespace and splitting any strings that contain spaces into multiple strings.
@@ -107,6 +164,18 @@ export const isUndefined = (value: any): boolean => {
   }
   return false;
 };
+
+
+/**
+ * Checks if the input is a boolean.
+ * @param input The input to check.
+ * @returns True if the input is a boolean, false otherwise.
+ * 
+ */
+export const isBoolean = (input: any): boolean => {
+  return typeof input === "boolean";
+}
+
 
 /**
  * Checks if the input is a number.

@@ -1,6 +1,9 @@
 import { generateBemm, returnValues } from "../useBemm";
 import {
   cleanArray,
+  isArray,
+  isNullOrUndefined,
+  isString,
 } from "../helpers";
 import {
   BemmSettings,
@@ -52,7 +55,7 @@ const classesFromArray = (
  */
 const classesFromString = (
   block: string,
-  input: string,
+  rawElement: string,
   settings: BemmSettings = {}
 ): string[] => {
   const b: { [key: string]: string } = {
@@ -60,11 +63,12 @@ const classesFromString = (
     element: "",
     modifier: "",
   };
-  if (input.includes(":")) {
-    b.element = input.split(":")[0];
-    b.modifier = input.split(":")[1];
+  if (rawElement.includes(":")) {
+    const [element, modifier] = rawElement.split(":");
+    b.element = element;
+    b.modifier = modifier;
   } else {
-    b.element = input;
+    b.element = rawElement;
   }
 
   return generateBemm(b.block, b.element, b.modifier, {
@@ -98,7 +102,7 @@ const classesFromObject = (
     modifier: input.modifier || input.m || "",
   };
 
-  return generateBemm(b, bemmObject, "", {
+  return generateBemm(b, bemmObject.element, bemmObject.modifier, {
     ...settings,
     return: BemmReturn.ARRAY,
   }) as string[];
@@ -110,25 +114,12 @@ const classesFromObject = (
  * @returns The input type.
  */
 const getInputType = (input: any): InputType => {
-  if (input === null || input === undefined) return InputType.NONE;
+  if (isNullOrUndefined(input)) return InputType.NONE;
+  if (isString(input)) return InputType.STRING;
+  if ((isArray(input) && input.length < 2 || isAcceptedArray(input)) && !isFalseArray(input)) return InputType.ARRAY;
+  if (isBemmObject(input)) return InputType.OBJECT;
 
-  if (typeof input === "string") {
-    return InputType.STRING;
-  }
-
-  if (
-    (Array.isArray(input) && input.length < 4) ||
-    isAcceptedArray(input)
-  ) {
-    if (isFalseArray(input)) return InputType.NONE;
-    return InputType.ARRAY;
-  }
-
-  if (isBemmObject(input)) {
-    return InputType.OBJECT;
-  }
-
-  return InputType.NONE;
+  return InputType.FALSE;
 };
 
 /**
@@ -142,19 +133,22 @@ export const useClasses = (
   settings: BemmSettings = {}
 ): useClassesReturnType => {
   const classes = (...args: useClassesInputType): string | string[] => {
-    const blocks = typeof block == "string" ? [block] : block;
+    const blocks = isString(block) ? [block] : block;
 
     let classes: string[] = [];
 
     blocks.forEach((b) => {
       if (args.length == 0 || args[0] == null || args[0] == "") {
         classes.push(
-          generateBemm(b, "", "", { return: BemmReturn.STRING }) as string
+          ...generateBemm(b,'','', { return: BemmReturn.ARRAY })
         );
       }
-
-      args.forEach((arg: any) => {
+    
+      args.forEach((arg: any, index) => {
         switch (getInputType(arg)) {
+          case InputType.NONE:
+            classes.push(...classesFromString(b, "", settings));
+            break;
           case InputType.STRING:
             classes.push(...classesFromString(b, arg, settings));
             break;

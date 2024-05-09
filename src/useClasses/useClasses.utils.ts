@@ -1,4 +1,5 @@
-import { isArray, isStringArray, isString } from "../helpers";
+import { isArray, isStringArray, isString, isNullOrUndefined, isObject } from "../helpers";
+import { BemmObject } from "./useClasses.model";
 
 /**
  * Converts the input into an element name.
@@ -34,8 +35,8 @@ export const toModifier = (input: any): string | string[] => {
  *
  */
 
-export const isBemmObject = (input: any): boolean => {
-  if (typeof input !== "object" && !Array.isArray(input) && input !== null)
+export const isBemmObject = (input: unknown): input is BemmObject => {
+  if (!isObject(input) || isArray(input) || isString(input) || isNullOrUndefined(input))
     return false;
 
   const allowedKeys = [
@@ -56,7 +57,7 @@ export const isBemmObject = (input: any): boolean => {
   return isAllowed;
 };
 
-export const isAcceptedArray = (input: any): boolean => {
+export const isAcceptedArray = (input: unknown): input is string[] => {
   if (isArray(input)) {
     if (isString(input[0]) && (isStringArray(input[1]) || isString(input[1]))) {
       return true;
@@ -71,11 +72,11 @@ export const isAcceptedArray = (input: any): boolean => {
  * @returns True if the input is an array representing a false condition, false otherwise.
  */
 export const isFalseArray = (input: any): boolean => {
-    if (!isString(input) && input[2] !== undefined) {
-      if (!input[2]) {
-        return true;
-      }
+  if (!isString(input) && input[2] !== undefined) {
+    if (!input[2]) {
+      return true;
     }
-  
-    return false;
-  };
+  }
+
+  return false;
+};

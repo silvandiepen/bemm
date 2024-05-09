@@ -1,4 +1,4 @@
-import { isArray, isStringArray, cleanArray } from "../helpers";
+import { isArray, isStringArray, cleanArray, isString } from "../helpers";
 import { keyObject, classesInput } from "./classNames.model";
 import { isValidObject, isMixedInput } from "./classNames.utils";
 
@@ -26,7 +26,7 @@ const getObjectClasses = (input: any): string[] => {
 const generateClasses = (input: classesInput): string[] => {
   let classArray: string[] = [];
 
-  if (typeof input == "string") {
+  if (isString(input)) {
     classArray = [input];
   } else if (isStringArray(input)) {
     classArray = input as string[];

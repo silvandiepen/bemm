@@ -8,7 +8,7 @@ export interface BemmModifiers {
   [key: string]: boolean | number;
 }
 export interface BemmObject {
-  element: string | null;
+  element: string | string[] | null;
   modifier: string | string[] | BemmModifiers;
   show?: boolean;
 }
