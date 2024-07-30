@@ -6,5 +6,6 @@ export default defineConfig({
   clean: true,
   outDir: "dist/module",
   format: ["cjs", "esm", "iife"],
+  dts: true,
   shims: true,
 });
