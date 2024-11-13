@@ -15,10 +15,11 @@
     "prepublishOnly": "npm run build && npm run test"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./module": {
-      "require": "./dist/module/index.js",
-      "import": "./dist/module/index.mjs"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "keywords": [
