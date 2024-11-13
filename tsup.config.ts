@@ -19,5 +19,6 @@ export default defineConfig({
   minify: false,
   esbuildOptions(options) {
     options.mainFields = ['module', 'main'];
+    options.format = 'cjs';
   }
 });

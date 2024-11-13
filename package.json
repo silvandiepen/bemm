@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:clear": "jest --clearCache",
     "build:ts": "tsc",
     "build": "rimraf dist && tsup --dts-resolve && npm run build:ts",
     "prepublishOnly": "npm run build && npm run test"
