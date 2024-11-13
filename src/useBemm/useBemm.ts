@@ -1,7 +1,6 @@
 import {
   isArray,
   isBoolean,
-  isNullOrUndefined,
   isNumeric,
   isObject,
   isString,
@@ -31,6 +30,7 @@ type BemmReturnType<S extends BemmSettings> = S['return'] extends 'array' ? stri
  * Convert
  *
  */
+
 /**
  * Converts the provided parameters into a BEM object.
  *
@@ -39,7 +39,6 @@ type BemmReturnType<S extends BemmSettings> = S['return'] extends 'array' ? stri
  * @param alt - The alternative BEM object to use when the input parameters do not match the expected types.
  * @returns The BEM object with element name, modifier name, and show flag.
  */
-
 export const toBemmObject = (
   e: string | string[] | BemmObject | null,
   m: string | string[] | BemmModifiers,
@@ -88,6 +87,7 @@ const toBemmSettings = (settings: BemmSettings): BemmSettings => {
   return {
     toKebabCase: true,
     return: BemmReturn.AUTO,
+    includeBaseClass: false,
     ...settings,
     prefix: prefix,
   };
@@ -98,6 +98,7 @@ const toBemmSettings = (settings: BemmSettings): BemmSettings => {
  * Create a BEMM class
  *
  */
+
 /**
  * Determines the return value based on the BEM settings.
  *
@@ -106,11 +107,14 @@ const toBemmSettings = (settings: BemmSettings): BemmSettings => {
  * @returns The BEM classes as a string or array of strings, based on the settings.
  */
 export const returnValues = (
-  classes: string[],
-  settings: BemmSettings
-): string | string[] => {
+  opts: {
+    classes: string[],
+    settings: BemmSettings
+  }): string | string[] => {
 
-  switch (settings.return) {
+  const classes = Array.from(new Set(opts.classes.filter((c) => c !== "")));
+
+  switch (opts.settings.return) {
     case BemmReturn.STRING:
       return classes.join(" ")
     case BemmReturn.ARRAY:
@@ -120,6 +124,7 @@ export const returnValues = (
       return (classes.length == 1 ? classes[0] : classes);
   }
 };
+
 /**
  * Generates BEM classes based on the provided parameters.
  *
@@ -129,76 +134,118 @@ export const returnValues = (
  * @param s - Optional BEM settings.
  * @returns The generated BEM classes as a string or array of strings.
  */
-
 const convertCase = (str: string, settings: BemmSettings): string => {
   if (settings.toKebabCase) str = toKebabCase(str);
   return str;
 };
 
-const constructElementClass = (
+/**
+ * Construct Element Class
+ * @param opts
+ * @param {string} opts.block
+ * @param {string} opts.element
+ * @param {BemmSettings} opts.settings
+ * @returns {string}
+ */
+const constructElementClass = (opts: {
   block: string,
   element: string | string[] | null,
   settings: BemmSettings
-): string => {
-  if (element == null || element == "" || element.length == 0) return convertCase(block, settings);
+}): string => {
+  if (opts.element == null || opts.element == "" || opts.element.length == 0) return convertCase(opts.block, opts.settings);
 
-  return toStringArray(element).map((e) => `${convertCase(block, settings)}${settings.prefix?.element
-    }${convertCase(e, settings)}`).join(" ");
+  return toStringArray(opts.element).map((e) => `${convertCase(opts.block, opts.settings)}${opts.settings.prefix?.element
+    }${convertCase(e, opts.settings)}`).join(" ");
 };
 
-const constructModifierClass = (
+/**
+ * Construct Modifier Class
+ * @param opts
+ * @param {string} opts.elementClass
+ * @param {string} opts.modifier
+ * @param {BemmSettings} opts.settings
+ * @returns {string}
+  */
+const constructModifierClass = (opts: {
   elementClass: string,
   modifier: string | null,
   settings: BemmSettings
-): string => {
-  if (modifier == null || modifier == "") return elementClass;
-  return `${elementClass}${settings.prefix?.modifier}${convertCase(
-    modifier,
-    settings
+}): string => {
+  if (opts.modifier == null || opts.modifier == "") return opts.elementClass;
+  return `${opts.elementClass}${opts.settings.prefix?.modifier}${convertCase(
+    opts.modifier,
+    opts.settings
   )}`;
 };
 
-
-const handleGenerateArray = (elementClass: string, modifier: string[], settings: BemmSettings) => {
+/**
+ *  Handle Generate Array
+ * @param opts
+ * @param {string} opts.elementClass
+ * @param {string[]} opts.modifier
+ * @param {BemmSettings} opts.settings
+ * @returns
+ */
+const handleGenerateArray = (
+  opts: { elementClass: string, modifier: string[], settings: BemmSettings }) => {
   const classes: string[] = [];
-  modifier.forEach((mod: string) => {
-    classes.push(constructModifierClass(elementClass, mod, settings));
+  opts.modifier.forEach((mod: string) => {
+    classes.push(constructModifierClass({
+      elementClass: opts.elementClass, modifier: mod,
+      settings: opts.settings
+    }));
   });
   return classes;
 }
 
+/**
+ *
+ * @params opts
+ * @param {string} opts.elementClass
+ * @param {BemmObject['modifier']} opts.modifier
+ * @param {BemmSettings} opts.settings
+ * @returns {string[]}
+ */
+const handleGenerateObject = (opts: {
+  elementClass: string,
+  modifier: BemmObject['modifier'],
+  settings: BemmSettings
+}): string[] => {
 
-const handleGenerateObject = (elementClass: string, modifier: BemmObject['modifier'], settings: BemmSettings) => {
   const classes: string[] = [];
 
-  Object.keys(modifier).forEach((mod: string) => {
-    const shouldShow = !!(modifier as BemmModifiers)[mod];
+  Object.keys(opts.modifier).forEach((mod: string) => {
+    const shouldShow = !!(opts.modifier as BemmModifiers)[mod];
 
     if (!mod.includes("|")) {
       classes.push(
-        constructModifierClass(
-          elementClass,
-          shouldShow ? mod : null,
-          settings
-        )
+        constructModifierClass({
+          elementClass: opts.elementClass,
+          modifier: shouldShow ? mod : null,
+          settings: opts.settings
+        })
       );
     } else {
-      if (isNumeric((modifier as BemmModifiers)[mod])) {
-        const showIndex = (modifier as BemmModifiers)[mod] as number;
+      if (isNumeric((opts.modifier as BemmModifiers)[mod])) {
+        const showIndex = (opts.modifier as BemmModifiers)[mod] as number;
         const modArray = mod.split("|");
         const modValue = modArray[showIndex] || "";
         classes.push(
-          constructModifierClass(elementClass, modValue, settings)
+          constructModifierClass({
+            elementClass: opts.elementClass,
+            modifier: modValue,
+            settings: opts.settings
+          })
         );
       } else {
         const trueValue = mod.split("|")[0];
         const falseValue = mod.split("|")[1];
         classes.push(
-          constructModifierClass(
-            elementClass,
-            shouldShow ? trueValue : falseValue,
-            settings
-          )
+          constructModifierClass({
+            elementClass: opts.elementClass,
+            modifier: shouldShow ? trueValue : falseValue,
+            settings: opts.settings
+          })
         );
       }
     }
@@ -207,8 +254,15 @@ const handleGenerateObject = (elementClass: string, modifier: BemmObject['modifi
   return classes;
 }
 
-
-
+/**
+ * Generates BEM (Block Element Modifier) class names based on the provided block, element, modifier, and settings.
+ *
+ * @param {string} block - The block name.
+ * @param {string} [e=""] - The element name.
+ * @param {string} [m=""] - The modifier name.
+ * @param {BemmSettings} s - The settings for BEM generation.
+ * @returns {string | string[]} - The generated BEM class names. Returns a string if `s.return` is 'string', otherwise returns an array of strings.
+ */
 export const generateBemm = (
   block: string,
   e: BemmObject["element"] = "",
@@ -228,23 +282,30 @@ export const generateBemm = (
   const classes: string[] = [];
 
   toStringArray(e).forEach((el) => {
-    const elementClass = constructElementClass(block, el, settings);
+    const elementClass = constructElementClass({
+      block, element: el, settings
+    });
+
+    if(settings.includeBaseClass) classes.push(elementClass);
 
     switch (true) {
       case isString(modifier):
       case isArray(modifier):
-        classes.push(...handleGenerateArray(elementClass, toStringArray(modifier), settings));
+        classes.push(...handleGenerateArray({
+          elementClass,
+          modifier: toStringArray(modifier),
+          settings
+        }));
         break;
       case isObject(modifier):
-        classes.push(...handleGenerateObject(elementClass, modifier as BemmModifiers, settings));
+        classes.push(...handleGenerateObject({ elementClass, modifier: modifier as BemmModifiers, settings }));
         break;
       default:
         classes.push(elementClass);
     }
-
   });
 
-  return returnValues(classes, settings);
+  return returnValues({ classes, settings });
 };
 
 /*
@@ -255,9 +316,9 @@ export const generateBemm = (
 /**
  * Generates multiple sets of BEM classes for various blocks.
  *
- * @param blocks - An object containing block names or arrays of block names.
- * @param baseSettings - Optional base BEM settings.
- * @returns An object containing multiple sets of BEM generation functions and additional BEM-related properties.
+ * @param {MultiBemmBlocks} blocks - An object containing block names or arrays of block names.
+ * @param {BemmSettings} [baseSettings={}] - Optional base BEM settings.
+ * @returns {MultiBemmObject} An object containing multiple sets of BEM generation functions and additional BEM-related properties.
  */
 export const useBemms = (
   blocks: MultiBemmBlocks,
@@ -278,12 +339,13 @@ export const useBemms = (
  * useBemm
  *
  */
+
 /**
- * Custom hook for generating BEM classes.
+ * Custom hook for generating BEM (Block Element Modifier) classes.
  *
- * @param block - The block name or an array of block names.
- * @param baseSettings - Optional base BEM settings.
- * @returns An object with BEM generation functions and additional properties related to BEM.
+ * @param {string | string[]} block - The block name or an array of block names.
+ * @param {BemmSettings} [baseSettings={}] - Optional base BEM settings.
+ * @returns {useBemmReturnType & bemmReturnType} An object with BEM generation functions and additional properties related to BEM.
  */
 export const useBemm = (
   block: string | string[],
@@ -303,12 +365,10 @@ export const useBemm = (
 
     let classes: string[] = [];
 
-
     const { element, modifier, show } = toBemmObject(e, m, {
       element: isBemmObject(e) ? e.element : e as string | string[] | null,
       modifier: isBemmObject(e) ? e.modifier : m
     });
-
 
     switch (true) {
       case isString(block):
@@ -329,7 +389,10 @@ export const useBemm = (
 
     if (!show) return "";
 
-    return returnValues(classes, settings);
+    return returnValues({
+      classes,
+      settings
+    });
   };
 
   bemm.bemm = bemm;

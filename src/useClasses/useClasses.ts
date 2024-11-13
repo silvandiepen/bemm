@@ -140,10 +140,10 @@ export const useClasses = (
     blocks.forEach((b) => {
       if (args.length == 0 || args[0] == null || args[0] == "") {
         classes.push(
-          ...generateBemm(b,'','', { return: BemmReturn.ARRAY })
+          ...generateBemm(b, '', '', { return: BemmReturn.ARRAY })
         );
       }
-    
+
       args.forEach((arg: any, index) => {
         switch (getInputType(arg)) {
           case InputType.NONE:
@@ -162,7 +162,7 @@ export const useClasses = (
       });
     });
 
-    return returnValues(cleanArray(classes), settings);
+    return returnValues({ classes: cleanArray(classes), settings });
   };
 
   return classes;

@@ -28,6 +28,7 @@ export interface BemmSettings {
     element?: string;
     modifier?: string;
   };
+  includeBaseClass?: boolean;
 }
 
 export interface MultiBemmObject {

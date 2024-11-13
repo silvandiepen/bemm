@@ -14,6 +14,7 @@ Available settings:
 | ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `toKebabCase` | `true`  | Converts all elements to `kebab-case`                                                                                                                                                    |
 | `return`      | `auto`  | By default the output will be determinded by the amount of classes, 1 class will be a string and multiple an array. You can fix this by defining `string` or `array` as the return value |
+| `includeBaseClass` | `false` | By default when creating a bemm class with modifiers, the base element class is not being returned, this can be overruled by setting includeBaseClass, which will make sure the base Element class will always be returned |
 
 Usage of settings:
 
