@@ -1,28 +1,27 @@
 {
   "name": "bemm",
-  "version": "1.1.4",
+  "version": "1.1.2",
   "description": "Create BEM style classes",
-  "main": "dist/index.js",
-  "module": "dist/module/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "type": "commonjs",
   "files": [
     "dist"
   ],
-  "scripts": {
-    "test": "jest",
-    "test:clear": "jest --clearCache",
-    "build:ts": "tsc",
-    "build": "rimraf dist && tsup --dts-resolve && npm run build:ts",
-    "prepublishOnly": "npm run build && npm run test"
-  },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   },
+  "scripts": {
+    "build": "rimraf dist && tsup",
+    "test": "jest",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "sideEffects": false,
   "keywords": [
     "Bem",
     "class",
