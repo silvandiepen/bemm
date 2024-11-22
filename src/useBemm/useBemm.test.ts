@@ -177,6 +177,25 @@ describe("useBemm with Modifier Object", () => {
 
   })
 
+
+  it("returns a valid group of classes with the base class, when the setting is set to includeBaseClass is true",()=>{
+    const bemm = useBemm('block',{
+      includeBaseClass:true
+    });
+    const bemmClass = bemm('element',{ 'test': true});
+
+    expect(bemmClass).toEqual(['block__element', 'block__element--test']);
+
+  })
+  it("returns a valid single class with the base class, when the setting is set to includeBaseClass is false",()=>{
+    const bemm = useBemm('block',{
+      includeBaseClass:true
+    });
+    const bemmClass = bemm('element',{ 'test': false});
+
+    expect(bemmClass).toEqual('block__element');
+  })
+
   it("returns valid BEM class name with element and modifier where modifier is an object - with multiple", () => {
     const bemm = useBemm("block");
     const bemmClass = bemm("element", {
