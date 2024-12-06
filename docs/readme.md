@@ -1,6 +1,0 @@
----
-archive: articles
----
-
-# Docs
-
