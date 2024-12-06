@@ -1,3 +1,21 @@
+---
+title: Core Concepts
+description: Learn the fundamental concepts of BEM methodology and how to implement them using Bemm
+menu:
+  order: 3
+  group: Getting Started
+  title: Core Concepts
+tags:
+  - bem
+  - methodology
+  - concepts
+  - patterns
+hide: false
+image: null
+thumbnail: null
+projectStyle: null
+---
+
 # Core Concepts
 
 This guide explains the core concepts and principles behind Bemm's implementation of BEM methodology.
@@ -217,5 +235,5 @@ bemmWithBase('icon', 'large'); // → ['button__icon', 'button__icon--large']
 ## Next Steps
 
 - Learn about [Framework Integrations](/framework-integrations)
-- Explore [Advanced Usage](/advanced-usage)
-- Check out [Examples and Use Cases](/examples)
+- Explore [Examples](/examples)
+- Check out the [API Reference](/api-reference)

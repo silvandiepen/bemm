@@ -1,3 +1,12 @@
+---
+title: Contributing Guide
+description: Learn how to contribute to Bemm, including development setup, workflow, and guidelines for code, documentation, and releases
+menu:
+  order: 2
+  group: Advanced Topics
+  title: Contributing
+---
+
 # Contributing to Bemm
 
 Thank you for your interest in contributing to Bemm! This guide will help you get started with contributing to the project.
@@ -231,8 +240,8 @@ bemm('element', 'modifier');
 
 By contributing to Bemm, you agree that your contributions will be licensed under its ISC license.
 
-## Next Steps
+## See Also
 
-- Review the [Performance Guide](/performance)
-- Check out the [API Reference](/api-reference)
-- See [Examples and Use Cases](/examples)
+- [Performance Guide](/docs/performance)
+- [API Reference](/api-reference)
+- [Examples](/examples)

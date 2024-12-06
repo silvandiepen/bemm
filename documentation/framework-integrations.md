@@ -1,3 +1,12 @@
+---
+title: Framework Integrations
+description: Learn how to integrate Bemm with popular JavaScript frameworks like Vue, React, Nuxt, and Angular
+menu:
+  order: 4
+  group: Getting Started
+  title: Framework Integrations
+---
+
 # Framework Integrations
 
 Bemm seamlessly integrates with popular JavaScript frameworks. This guide demonstrates how to use Bemm effectively with different frameworks.
@@ -348,6 +357,6 @@ export class ExampleComponent {
 
 ## Next Steps
 
-- Explore [Advanced Usage](/advanced-usage)
-- Check out [Examples and Use Cases](/examples)
-- Learn about [Performance Optimization](/performance)
+- Check out [Examples](/examples)
+- Review the [API Reference](/api-reference)
+- Learn about [Performance Optimization](/docs/performance)

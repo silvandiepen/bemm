@@ -1,3 +1,30 @@
+---
+title: Bemm Documentation
+description: A lightweight, zero-dependency JavaScript/TypeScript library for BEM class naming in modern web applications
+menu:
+  order: 1
+  title: Overview
+  items:
+    - title: Getting Started
+      items:
+        - title: Installation
+          path: /installation
+        - title: Core Concepts
+          path: /core-concepts
+        - title: Framework Integrations
+          path: /framework-integrations
+    - title: Examples & Usage
+      items:
+        - title: Basic Examples
+          path: /examples
+        - title: Advanced Usage
+          path: /advanced-usage
+    - title: Reference
+      items:
+        - title: API Reference
+          path: /api-reference
+---
+
 # Bemm Documentation
 
 Bemm is a lightweight, zero-dependency JavaScript/TypeScript library designed to simplify BEM (Block Element Modifier) class naming in modern web applications. It provides an intuitive API for generating BEM-compliant class names, making it easier to maintain consistent CSS architecture across your projects.
@@ -66,67 +93,6 @@ bemm();                    // → 'button'
 bemm('icon');             // → 'button__icon'
 bemm('icon', 'large');    // → 'button__icon--large'
 ```
-
-## Documentation
-
-1. [Installation](/installation)
-   - Installation Methods
-   - Basic Setup
-   - Configuration Options
-   - Basic Usage Examples
-   - TypeScript Support
-
-2. [Core Concepts](/core-concepts)
-   - Understanding BEM with Bemm
-   - Working with Modifiers
-   - Return Types
-   - Case Transformation
-   - Base Class Inclusion
-   - Best Practices
-
-3. [Framework Integrations](/framework-integrations)
-   - Vue.js Integration
-   - React Integration
-   - Nuxt.js Integration
-   - Angular Integration
-   - Best Practices for Framework Integration
-
-4. [Advanced Usage](/advanced-usage)
-   - Pattern Matching System
-   - Working with Multiple Blocks
-   - Dynamic Block Names
-   - Advanced Modifier Patterns
-   - Custom Return Types
-   - Integration with CSS-in-JS
-
-5. [Examples and Use Cases](/examples)
-   - Common UI Components
-   - Layout Components
-   - Complex Components
-   - Real-world Examples
-
-6. [Performance Optimization](/performance)
-   - General Best Practices
-   - Memory Optimization
-   - Render Optimization
-   - Framework-Specific Optimizations
-   - Bundle Size Optimization
-   - Performance Monitoring
-
-7. [Contributing Guide](/contributing)
-   - Development Setup
-   - Project Structure
-   - Development Workflow
-   - Documentation Guidelines
-   - Release Process
-   - Code of Conduct
-
-8. [API Reference](/api-reference)
-   - Core Functions
-   - Helper Functions
-   - Type Definitions
-   - Constants
-   - Error Types
 
 ## Support
 

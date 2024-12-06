@@ -1,3 +1,20 @@
+---
+title: Installation and Setup
+description: Learn how to install and configure Bemm in your project, with examples for different module systems and TypeScript support
+menu:
+  order: 2
+  group: Getting Started
+  title: Installation
+tags:
+  - installation
+  - setup
+  - configuration
+hide: false
+image: null
+thumbnail: null
+projectStyle: null
+---
+
 # Installation and Setup
 
 This guide will walk you through installing and setting up Bemm in your project.
@@ -108,4 +125,4 @@ bemm('element', {
 
 - Learn about [Core Concepts](/core-concepts)
 - Explore [Framework Integrations](/framework-integrations)
-- Check out [Advanced Usage](/advanced-usage)
+- Check out [Examples](/examples)

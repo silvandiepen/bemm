@@ -1,3 +1,12 @@
+---
+title: Performance Optimization
+description: Advanced guide for optimizing Bemm's performance in your applications, including framework-specific optimizations and monitoring techniques
+menu:
+  order: 1
+  group: Advanced Topics
+  title: Performance Guide
+---
+
 # Performance Optimization
 
 This guide covers best practices and techniques for optimizing Bemm's performance in your applications.
@@ -283,8 +292,8 @@ function measureBemmPerformance() {
 }
 ```
 
-## Next Steps
+## See Also
 
-- Check out [Examples and Use Cases](/examples)
-- Read the [Contributing Guide](/contributing)
-- Review the [API Reference](/api-reference)
+- [Examples](/examples)
+- [API Reference](/api-reference)
+- [Contributing Guide](/docs/contributing)
