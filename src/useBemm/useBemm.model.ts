@@ -38,11 +38,11 @@ export interface MultiBemmObject {
 export interface MultiBemmBlocks {
   [key: string]: string | string[];
 }
-export type bemmReturnType = (
+export type bemmReturnType = <S extends BemmSettings = BemmSettings>(
   e?: BemmObject["element"] | BemmObject,
   m?: BemmObject["modifier"],
-  s?: BemmSettings
-) => {};
+  s?: S
+) => S extends { return: 'string' } ? string : S extends { return: 'array' } ? string[] : string | string[];
 
 export interface useBemmReturnType {
   bemm: bemmReturnType;

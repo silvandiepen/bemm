@@ -347,20 +347,20 @@ export const useBemms = (
  * @param {BemmSettings} [baseSettings={}] - Optional base BEM settings.
  * @returns {useBemmReturnType & bemmReturnType} An object with BEM generation functions and additional properties related to BEM.
  */
-export const useBemm = (
+export const useBemm = <S extends BemmSettings = BemmSettings>(
   block: string | string[],
-  baseSettings: BemmSettings = {}
+  baseSettings: S = {} as S
 ): useBemmReturnType & bemmReturnType => {
 
-  const bemm = (
+  const bemmFn = <T extends BemmSettings = S>(
     e: BemmObject["element"] | BemmObject = "",
     m: BemmObject["modifier"] = "",
-    s: BemmSettings = {}
-  ): string | string[] => {
+    s: T = baseSettings as unknown as T
+  ): T extends { return: 'string' } ? string : T extends { return: 'array' } ? string[] : string | string[] => {
     const settings = toBemmSettings({ ...baseSettings, ...s });
 
     if (isString(e) && isArray(e) && e !== null && !isUndefined((e as unknown as BemmObject)?.show)) {
-      return "";
+      return "" as T extends { return: 'string' } ? string : T extends { return: 'array' } ? string[] : string | string[];
     }
 
     let classes: string[] = [];
@@ -387,15 +387,16 @@ export const useBemm = (
         break;
     }
 
-    if (!show) return "";
+    if (!show) return "" as T extends { return: 'string' } ? string : T extends { return: 'array' } ? string[] : string | string[];
 
     return returnValues({
       classes,
       settings
-    });
+    }) as T extends { return: 'string' } ? string : T extends { return: 'array' } ? string[] : string | string[];
   };
 
-  bemm.bemm = bemm;
+  const bemm = bemmFn as useBemmReturnType & bemmReturnType;
+  bemm.bemm = bemmFn;
   bemm.classes = useClasses(block, baseSettings);
 
   return bemm;
